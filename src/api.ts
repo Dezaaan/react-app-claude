@@ -7,11 +7,11 @@ export const getNotes = async (): Promise<Note[]> => {
   return res.json();
 };
 
-export const createNote = async (text: string): Promise<Note> => {
+export const createNote = async (note: Note): Promise<Note> => {
   const res = await fetch(`${BASE_URL}/notes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify(note),
   });
 
   return res.json();
