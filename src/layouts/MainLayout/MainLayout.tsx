@@ -3,14 +3,15 @@
 import { Outlet } from "react-router-dom";
 
 import { Header } from "./Header";
+import { Navigation } from "@/navigation/Navigation";
 
 const MainLayout = () => {
   return (
-    <div className="layout">
+    <div>
       <Header />
 
-      <div className="layout-body">
-        <aside>{/* Navigation later */}</aside>
+      <div>
+        <Navigation />
 
         <main>
           <Outlet />
