@@ -5,6 +5,8 @@ import { NavLink } from "react-router-dom";
 import type { NavigationItemProps } from "./types";
 import styles from "./NavigationItem.module.scss";
 
+import { cn } from "@/shared/utils/cn";
+
 export const NavigationItem = ({
   to,
   children,
@@ -15,9 +17,7 @@ export const NavigationItem = ({
       to={to}
       end={to === "/"}
       className={({ isActive }) =>
-        [styles.link, className, isActive ? styles.active : ""]
-          .filter(Boolean)
-          .join(" ")
+        cn(styles.list, className, isActive && styles.active)
       }
     >
       {children}

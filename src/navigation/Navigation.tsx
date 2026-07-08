@@ -1,31 +1,27 @@
 // navigation/Navigation.tsx
 
-import { useMemo } from "react";
-
 import styles from "./Navigation.module.scss";
 
 import { NavigationItem } from "./NavigationItem";
-import { NavigationContext } from "./NavigationContext";
 import { useNavigationItems } from "./useNavigationItems";
 
-import type { NavigationProps } from "./types";
+import { List } from "@/shared/components/List/List";
+import { ListItem } from "@/shared/components/List/ListItem";
 
-const NavigationRoot = ({ children }: NavigationProps) => {
+const NavigationRoot = () => {
   const items = useNavigationItems();
 
   return (
     <nav className={styles.navigation}>
-      <ul>
+      <List variant="grid">
         {items.map((item) => (
-          <li key={item.path}>
+          <ListItem key={item.path}>
             <NavigationItem to={item.path}>
               {item.meta.navigation?.label}
             </NavigationItem>
-          </li>
+          </ListItem>
         ))}
-
-        {children}
-      </ul>
+      </List>
     </nav>
   );
 };

@@ -1,3 +1,3 @@
 // navigation/index.ts
 
-export { Navigation } from "./Navigation";
+export { Navigation } from "../navigation/Navigation";
