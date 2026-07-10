@@ -11,6 +11,45 @@ const HomePage = lazy(() => import("../../pages/Home"));
 const NotesPage = lazy(() => import("../../pages/Notes"));
 const SettingsPage = lazy(() => import("../../pages/Settings"));
 
+const navItems = [
+  {
+    path: ROUTES.HOME,
+    Component: HomePage,
+    meta: {
+      title: "Home",
+      navigation: {
+        label: "Home",
+        visible: true,
+        order: 1,
+      },
+    },
+  },
+  {
+    path: ROUTES.NOTES,
+    Component: NotesPage,
+    meta: {
+      title: "Notes",
+      navigation: {
+        label: "Notes",
+        visible: true,
+        order: 2,
+      },
+    },
+  },
+  {
+    path: ROUTES.SETTINGS,
+    Component: SettingsPage,
+    meta: {
+      title: "Settings",
+      navigation: {
+        label: "Settings",
+        visible: true,
+        order: 3,
+      },
+    },
+  },
+];
+
 export const routeConfig: RouteConfig[] = [
   {
     path: "/",
@@ -18,43 +57,6 @@ export const routeConfig: RouteConfig[] = [
     meta: {
       title: "Main",
     },
-    children: [
-      {
-        path: ROUTES.HOME,
-        Component: HomePage,
-        meta: {
-          title: "Home",
-          navigation: {
-            label: "Home",
-            visible: true,
-            order: 1,
-          },
-        },
-      },
-      {
-        path: ROUTES.NOTES,
-        Component: NotesPage,
-        meta: {
-          title: "Notes",
-          navigation: {
-            label: "Notes",
-            visible: true,
-            order: 2,
-          },
-        },
-      },
-      {
-        path: ROUTES.SETTINGS,
-        Component: SettingsPage,
-        meta: {
-          title: "Settings",
-          navigation: {
-            label: "Settings",
-            visible: true,
-            order: 3,
-          },
-        },
-      },
-    ],
+    children: navItems,
   },
 ];
