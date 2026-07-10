@@ -11,7 +11,7 @@ const HomePage = lazy(() => import("../../pages/Home"));
 const NotesPage = lazy(() => import("../../pages/Notes"));
 const SettingsPage = lazy(() => import("../../pages/Settings"));
 
-const navItems = [
+const routes = [
   {
     path: ROUTES.HOME,
     Component: HomePage,
@@ -57,6 +57,6 @@ export const routeConfig: RouteConfig[] = [
     meta: {
       title: "Main",
     },
-    children: navItems,
+    children: routes,
   },
 ];

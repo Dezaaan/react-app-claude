@@ -1,3 +1,24 @@
-.item {
+.container {
   position: relative;
+}
+
+.trigger {
+  padding: 0.5rem;
+
+  border: none;
+  border-radius: 6px;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+}
+
+.trigger:hover {
+  background: var(--surface-hover);
+}
+
+.open {
+  background: var(--surface-active);
 }

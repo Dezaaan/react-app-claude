@@ -10,7 +10,7 @@ import { NavigationMenu } from "../NavigationMenu/NavigationMenu/NavigationMenu"
 export const Navigation = ({ children }: NavigationProps) => {
   return (
     <nav className={styles.navigation}>
-      <List variant="grid">{children}</List>
+      <List variant="horizontal">{children}</List>
     </nav>
   );
 };

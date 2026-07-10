@@ -1,9 +1,29 @@
-.link {
-  text-decoration: none;
-  color: inherit;
+.item {
+  list-style: none;
 }
 
-.active {
-  font-weight: bold;
-  text-decoration: underline;
+.link,
+.button {
+  width: 100%;
+
+  display: block;
+
+  padding: 0.75rem 1rem;
+
+  border: none;
+  background: transparent;
+
+  text-align: left;
+  text-decoration: none;
+
+  cursor: pointer;
+
+  color: #333;
+
+  transition: background-color 0.2s ease;
+}
+
+.link:hover,
+.button:hover {
+  background-color: #6b6375;
 }

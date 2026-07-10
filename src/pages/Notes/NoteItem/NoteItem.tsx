@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import styles from "./NoteItem.module.scss";
+import { cn } from "@/shared/utils/cn";
 
 interface NoteItemProps {
   title: string;
@@ -13,7 +14,7 @@ export const NoteItem = ({ title, description }: NoteItemProps) => {
   return (
     <div className={styles.item}>
       <button
-        className={styles.button}
+        className={cn(styles.trigger, expanded && styles.active)}
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
       >

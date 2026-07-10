@@ -8,7 +8,7 @@ export const NavigationLinks = () => {
   return (
     <>
       {navigationItems.map((navItem) => (
-        <ListItem key={navItem.path}>
+        <ListItem key={navItem.path} variant="default">
           <NavigationItem to={navItem.path}>
             {navItem.meta.navigation?.label}
           </NavigationItem>

@@ -4,7 +4,7 @@ import { NavigationMenuItem } from "../NavigationMenuItem/NavigationMenuItem";
 
 export const NavigationMenuItems = () => {
   return (
-    <ul className={styles.menu}>
+    <ul className={styles.menuItems}>
       {menuItems.map((item) => (
         <NavigationMenuItem item={item} key={item.id} />
       ))}

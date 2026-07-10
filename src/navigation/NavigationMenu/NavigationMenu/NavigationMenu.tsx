@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { NavigationMenuItems } from "../NavigationMenuItems/NavigationMenuItems";
 import styles from "./NavigationMenu.module.scss";
 import { useClickOutside } from "@/navigation/hooks/useClickOutside";
+import { cn } from "@/shared/utils/cn";
 
 export const NavigationMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,8 +17,12 @@ export const NavigationMenu = () => {
   useClickOutside(menuRef, closeMenu, isOpen);
 
   return (
-    <ListItem className={styles.item} ref={menuRef}>
-      <button type="button" onClick={() => setIsOpen((prev) => !prev)}>
+    <ListItem className={styles.container} ref={menuRef}>
+      <button
+        type="button"
+        className={cn(styles.trigger, isOpen && styles.open)}
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
         ☰
       </button>
 
