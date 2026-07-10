@@ -2,10 +2,10 @@
 
 import { NavLink } from "react-router-dom";
 
-import type { NavigationItemProps } from "./types";
 import styles from "./NavigationItem.module.scss";
 
 import { cn } from "@/shared/utils/cn";
+import type { NavigationItemProps } from "../types";
 
 export const NavigationItem = ({
   to,

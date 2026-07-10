@@ -1,9 +1,9 @@
 // pages/NotesPage/NotesPage.tsx
 
 import { List, ListItem } from "@/shared/components/List";
-import { NoteItem } from "./NoteItem";
+import { NoteItem } from "../NoteItem/NoteItem";
 
-import styles from "./Note.module.scss";
+import styles from "./NotesPage.module.scss";
 
 const notes = [
   {

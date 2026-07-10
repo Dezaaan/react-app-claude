@@ -2,11 +2,11 @@
 
 import styles from "./Navigation.module.scss";
 
-import { NavigationItem } from "./NavigationItem";
-import { useNavigationItems } from "./useNavigationItems";
+import { useNavigationItems } from "../hooks/useNavigationItems";
 
-import { List } from "@/shared/components/List/List";
-import { ListItem } from "@/shared/components/List/ListItem";
+import { List } from "@/shared/components/List/List/List";
+import { ListItem } from "@/shared/components/List/ListItem/ListItem";
+import { NavigationItem } from "../NavigationItem/NavigationItem";
 
 const NavigationRoot = () => {
   const items = useNavigationItems();

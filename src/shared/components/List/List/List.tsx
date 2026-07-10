@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 import styles from "./List.module.scss";
 
-import type { ListProps } from "./types";
+import type { ListProps } from "../types";
 
 export const List = ({
   children,

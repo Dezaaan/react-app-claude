@@ -3,7 +3,7 @@
 import { Outlet } from "react-router-dom";
 
 import { Header } from "./Header";
-import { Navigation } from "@/navigation/Navigation";
+import { Navigation } from "@/navigation/Navigation/NavigationRoot";
 
 const MainLayout = () => {
   return (
