@@ -1,0 +1,17 @@
+import { List } from "@/shared/components/List";
+import styles from "./Footer.module.scss";
+import { FooterColumn } from "../FooterColumn/FooterColumn";
+
+import { footerConfig } from "../footer-config";
+
+export const Footer = () => {
+  return (
+    <footer className={styles.footer}>
+      <List layout="grid" className={styles.container}>
+        {footerConfig.map((column) => (
+          <FooterColumn key={column.id} column={column} />
+        ))}
+      </List>
+    </footer>
+  );
+};

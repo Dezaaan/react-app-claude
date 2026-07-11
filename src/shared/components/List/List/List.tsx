@@ -7,20 +7,11 @@ import type { ListProps } from "../types";
 export const List = ({
   children,
   className,
-  orientation = "column",
-  variant = "default",
+  layout = "default",
   ...props
 }: ListProps) => {
   return (
-    <ul
-      className={clsx(
-        styles.list,
-        styles[orientation],
-        styles[variant],
-        className,
-      )}
-      {...props}
-    >
+    <ul className={clsx(styles.list, styles[layout], className)} {...props}>
       {children}
     </ul>
   );

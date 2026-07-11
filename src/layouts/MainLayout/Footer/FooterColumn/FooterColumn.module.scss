@@ -1,0 +1,22 @@
+.column {
+  text-align: left;
+}
+
+.column h3 {
+  margin-bottom: 1rem;
+
+  color: var(--text-h);
+}
+
+.column ul {
+  list-style: none;
+
+  padding: 0;
+  margin: 0;
+}
+
+.column li {
+  margin-bottom: 0.5rem;
+
+  color: var(--text);
+}

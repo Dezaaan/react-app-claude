@@ -30,7 +30,7 @@ const NotesPage = () => {
 
       <List>
         {notes.map((note) => (
-          <ListItem key={note.id} variant="card">
+          <ListItem key={note.id} direction="card">
             <NoteItem {...note} />
           </ListItem>
         ))}

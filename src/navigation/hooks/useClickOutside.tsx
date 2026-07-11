@@ -5,7 +5,6 @@ export const useClickOutside = (
   handler: () => void,
   enabled = true,
 ) => {
-  console.log("useClickOutside", { enabled });
   useEffect(() => {
     if (!enabled) {
       return;
@@ -13,7 +12,6 @@ export const useClickOutside = (
 
     const listener = (event: PointerEvent) => {
       const element = ref.current;
-      console.log("element", element);
       if (!element || element.contains(event.target as Node)) {
         return;
       }

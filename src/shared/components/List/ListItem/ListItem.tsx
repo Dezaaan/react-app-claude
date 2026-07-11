@@ -6,9 +6,9 @@ import type { ListItemProps } from "../types";
 import { forwardRef } from "react";
 
 export const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
-  ({ children, className, variant = "default", ...props }, ref) => {
+  ({ children, className, direction = "default", ...props }, ref) => {
     return (
-      <li className={clsx(styles[variant], className)} {...props} ref={ref}>
+      <li className={clsx(styles[direction], className)} {...props} ref={ref}>
         {children}
       </li>
     );
