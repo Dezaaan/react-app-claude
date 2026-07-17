@@ -1,6 +1,6 @@
 import { ListItem } from "@/shared/components/List";
-import { useNavigationItems } from "../hooks/useNavigationItems";
 import { NavigationItem } from "../NavigationItem/NavigationItem";
+import { useNavigationItems } from "@/navigation/hooks/useNavigationItems";
 
 export const NavigationLinks = () => {
   const navigationItems = useNavigationItems();

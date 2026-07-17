@@ -1,7 +1,7 @@
-import { cn } from "@/shared/utils/cn";
-import { NavLink } from "react-router-dom";
-import type { NavigationMenuItemProps } from "../types";
 import styles from "./NavigationMenuItem.module.scss";
+import type { NavigationMenuItemProps } from "../../types";
+import { NavLink } from "react-router-dom";
+import { cn } from "@/shared/utils/cn";
 
 export const NavigationMenuItem = ({ item }: NavigationMenuItemProps) => {
   return (

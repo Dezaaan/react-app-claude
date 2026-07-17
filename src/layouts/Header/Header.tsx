@@ -1,5 +1,5 @@
-import { Navigation } from "@/navigation";
 import styles from "./Header.module.scss";
+import { Navigation } from "@/navigation";
 
 export const Header = () => {
   return (

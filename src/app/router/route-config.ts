@@ -2,7 +2,7 @@
 
 import { lazy } from "react";
 
-import MainLayout from "@/layouts/MainLayout";
+import MainLayout from "@/layouts";
 
 import { ROUTES } from "./routes";
 import type { RouteConfig } from "./types";

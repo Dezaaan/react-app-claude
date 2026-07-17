@@ -1,6 +1,6 @@
 import styles from "./NavigationMenuItems.module.scss";
-import { menuItems } from "../menu-items";
 import { NavigationMenuItem } from "../NavigationMenuItem/NavigationMenuItem";
+import { menuItems } from "../../menu-items";
 
 export const NavigationMenuItems = () => {
   return (

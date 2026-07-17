@@ -1,9 +1,9 @@
-import { ListItem } from "@/shared/components/List";
-import { useCallback, useRef, useState } from "react";
-import { NavigationMenuItems } from "../NavigationMenuItems/NavigationMenuItems";
 import styles from "./NavigationMenu.module.scss";
-import { useClickOutside } from "@/navigation/hooks/useClickOutside";
+import { ListItem } from "@/shared/components/List";
+import { NavigationMenuItems } from "../NavigationMenuItems/NavigationMenuItems";
 import { cn } from "@/shared/utils/cn";
+import { useCallback, useRef, useState } from "react";
+import { useClickOutside } from "@/navigation/hooks/useClickOutside";
 
 export const NavigationMenu = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import styles from "./NavigationItem.module.scss";
 
 import { cn } from "@/shared/utils/cn";
-import type { NavigationItemProps } from "../types";
+import type { NavigationItemProps } from "@/navigation/types";
 
 export const NavigationItem = ({
   to,
