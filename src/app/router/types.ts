@@ -1,9 +1,11 @@
 import type { ComponentType } from "react";
 
+export type RoutePlacement = "nav" | "menu";
+
 export interface RouteNavigation {
-  visible: boolean;
+  placement: RoutePlacement;
   label: string;
-  order?: number;
+  order: number;
 }
 
 export interface RouteMeta {

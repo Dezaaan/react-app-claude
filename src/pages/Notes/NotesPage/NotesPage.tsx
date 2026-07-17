@@ -1,5 +1,3 @@
-// pages/NotesPage/NotesPage.tsx
-
 import { List, ListItem } from "@/shared/components/List";
 import { NoteItem } from "../NoteItem/NoteItem";
 

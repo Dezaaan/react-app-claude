@@ -1,5 +1,3 @@
-// pages/Settings/SettingsPage.tsx
-
 const SettingsPage = () => {
   return (
     <div>

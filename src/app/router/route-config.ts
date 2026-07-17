@@ -1,5 +1,3 @@
-// app/route-config.ts
-
 import { lazy } from "react";
 
 import MainLayout from "@/layouts";
@@ -7,11 +5,14 @@ import MainLayout from "@/layouts";
 import { ROUTES } from "./routes";
 import type { RouteConfig } from "./types";
 
+const AboutPage = lazy(() => import("../../pages/About"));
+const ContactPage = lazy(() => import("../../pages/Contact"));
 const HomePage = lazy(() => import("../../pages/Home"));
 const NotesPage = lazy(() => import("../../pages/Notes"));
+const ProfilePage = lazy(() => import("../../pages/Profile"));
 const SettingsPage = lazy(() => import("../../pages/Settings"));
 
-const routes = [
+const routes: RouteConfig[] = [
   {
     path: ROUTES.HOME,
     Component: HomePage,
@@ -19,7 +20,7 @@ const routes = [
       title: "Home",
       navigation: {
         label: "Home",
-        visible: true,
+        placement: "nav",
         order: 1,
       },
     },
@@ -31,8 +32,44 @@ const routes = [
       title: "Notes",
       navigation: {
         label: "Notes",
-        visible: true,
+        placement: "nav",
         order: 2,
+      },
+    },
+  },
+  {
+    path: ROUTES.ABOUT,
+    Component: AboutPage,
+    meta: {
+      title: "About",
+      navigation: {
+        label: "About",
+        placement: "nav",
+        order: 3,
+      },
+    },
+  },
+  {
+    path: ROUTES.CONTACT,
+    Component: ContactPage,
+    meta: {
+      title: "Contact",
+      navigation: {
+        label: "Contact",
+        placement: "nav",
+        order: 4,
+      },
+    },
+  },
+  {
+    path: ROUTES.PROFILE,
+    Component: ProfilePage,
+    meta: {
+      title: "Profile",
+      navigation: {
+        label: "Profile",
+        placement: "menu",
+        order: 5,
       },
     },
   },
@@ -43,8 +80,8 @@ const routes = [
       title: "Settings",
       navigation: {
         label: "Settings",
-        visible: true,
-        order: 3,
+        placement: "menu",
+        order: 6,
       },
     },
   },
@@ -57,6 +94,11 @@ export const routeConfig: RouteConfig[] = [
     meta: {
       title: "Main",
     },
-    children: routes,
+    children: routes.toSorted((a, b) => {
+      //TODO not working as expected, need to check why
+      const orderA = a.meta.navigation?.order ?? Number.MAX_SAFE_INTEGER;
+      const orderB = b.meta.navigation?.order ?? Number.MAX_SAFE_INTEGER;
+      return orderA - orderB;
+    }),
   },
 ];
