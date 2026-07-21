@@ -7,7 +7,7 @@ import { footerConfig } from "../footer-config";
 export const Footer = () => {
   return (
     <footer className={styles.footer}>
-      <List layout="grid" className={styles.container}>
+      <List variant="grid" className={styles.container}>
         {footerConfig.map((column) => (
           <FooterColumn key={column.id} column={column} />
         ))}

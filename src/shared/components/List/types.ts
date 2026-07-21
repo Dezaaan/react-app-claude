@@ -1,9 +1,7 @@
-import type { HTMLAttributes, LiHTMLAttributes } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
-export type ListProps = HTMLAttributes<HTMLUListElement> & {
-  layout?: "default" | "grid" | "horizontal" | "vertical";
+export type ListProps = ComponentPropsWithoutRef<"ul"> & {
+  variant?: "default" | "row" | "grid";
 };
 
-export type ListItemProps = LiHTMLAttributes<HTMLLIElement> & {
-  direction?: "default" | "card";
-};
+export type ListItemProps = ComponentPropsWithoutRef<"li">;

@@ -26,9 +26,9 @@ const NotesPage = () => {
     <div className={styles.container}>
       <h1>Notes</h1>
 
-      <List>
+      <List className={styles.noteList}>
         {notes.map((note) => (
-          <ListItem key={note.id} direction="card">
+          <ListItem key={note.id} className={styles.noteItem}>
             <NoteItem {...note} />
           </ListItem>
         ))}

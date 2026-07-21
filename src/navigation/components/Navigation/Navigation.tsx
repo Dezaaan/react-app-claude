@@ -10,7 +10,7 @@ import { NavigationMenu } from "../NavigationMenu/components/NavigationMenu/Navi
 export const Navigation = ({ children }: NavigationProps) => {
   return (
     <nav className={styles.navigation}>
-      <List layout="horizontal">{children}</List>
+      <List variant="row">{children}</List>
     </nav>
   );
 };

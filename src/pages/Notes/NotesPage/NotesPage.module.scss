@@ -6,8 +6,20 @@
   width: 100%;
 }
 
-.item {
+.noteList {
+  width: 100%;
+  align-items: center;
+}
+
+.noteItem {
   cursor: pointer;
+  margin: 10px;
+  align-items: center;
+
+  button {
+    height: 50px;
+    width: 100px;
+  }
 }
 
 .description {
