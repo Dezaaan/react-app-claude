@@ -5,23 +5,3 @@
   flex-direction: column;
   width: 100%;
 }
-
-.noteList {
-  width: 100%;
-  align-items: center;
-}
-
-.noteItem {
-  cursor: pointer;
-  margin: 10px;
-  align-items: center;
-
-  button {
-    height: 50px;
-    width: 100px;
-  }
-}
-
-.description {
-  margin-top: 0.5rem;
-}
