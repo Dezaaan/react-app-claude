@@ -1,29 +1,23 @@
 import type { Note } from "../types";
 
-const notes: Note[] = [
-  {
-    id: "1",
-    title: "First note",
-    content: "This is my first note.",
-    createdAt: "2026-08-01",
-  },
-  {
-    id: "2",
-    title: "React architecture",
-    content: "Separate pages, features and shared components.",
-    createdAt: "2026-08-02",
-  },
-  {
-    id: "3",
-    title: "API layer",
-    content: "The API layer should hide HTTP details from components.",
-    createdAt: "2026-08-03",
-  },
-];
+const generateNotes = (count: number): Note[] => {
+  return Array.from({ length: count }, (_, index) => ({
+    id: crypto.randomUUID(),
+    title: `Note ${index + 1}`,
+    content: `This is the content of note ${index + 1}`,
+    createdAt: new Date().toISOString(),
+  }));
+};
+
+const notes: Note[] = generateNotes(40000);
 
 //TODO this will be changed to api call
 export const notesApi = {
   getNotes: async (): Promise<Note[]> => {
-    return notes;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(notes);
+      }, 500);
+    });
   },
 };

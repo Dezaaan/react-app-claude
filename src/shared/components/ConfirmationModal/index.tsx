@@ -7,7 +7,7 @@ type ConfirmationModalProps = {
   confirmLabel?: string;
   isOpen: boolean;
   onCancel: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   title: string;
 };
 

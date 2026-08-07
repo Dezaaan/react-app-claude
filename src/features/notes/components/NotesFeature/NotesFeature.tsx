@@ -3,17 +3,25 @@ import { ConfirmationModal } from "@/shared/components/ConfirmationModal";
 import { NotesList } from "../NotesList/NotesList";
 import { useModal } from "@/shared/components/Modal";
 import { useNotes } from "../../hooks/useNotes";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const NotesFeature = () => {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const { isModalOpen, openModal, closeModal } = useModal();
   const { notes, isLoading, error } = useNotes();
 
-  const handleNoteClick = (note: Note) => {
-    setSelectedNote({ ...note });
-    openModal();
-  };
+  const handleNoteItemClick = useCallback(
+    (note: Note) => {
+      setSelectedNote(note);
+      openModal();
+    },
+    [openModal],
+  );
+
+  const handleClose = useCallback(() => {
+    setSelectedNote(null);
+    closeModal();
+  }, [closeModal]);
 
   if (isLoading) {
     return <p>Loading notes...</p>;
@@ -25,12 +33,12 @@ export const NotesFeature = () => {
 
   return (
     <>
-      <NotesList notes={notes} handleNoteClick={handleNoteClick} />
+      <NotesList notes={notes} onClickNoteItem={handleNoteItemClick} />
       <ConfirmationModal
         body={selectedNote?.content || ""}
         isOpen={isModalOpen}
-        onCancel={closeModal}
-        onConfirm={() => {}}
+        onCancel={handleClose}
+        // onConfirm={() => {}}
         title="Note Description"
       />
     </>

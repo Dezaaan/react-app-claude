@@ -7,9 +7,10 @@ export const List = ({
   children,
   className,
   variant = "default",
+  ...props
 }: ListProps) => {
   return (
-    <ul className={clsx(styles.list, styles[variant], className)}>
+    <ul className={clsx(styles.list, styles[variant], className)} {...props}>
       {children}
     </ul>
   );

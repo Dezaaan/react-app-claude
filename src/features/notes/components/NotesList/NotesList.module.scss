@@ -1,6 +1,9 @@
 .notesList {
   width: 100%;
   align-items: center;
+
+  height: 700px;
+  overflow-y: auto;
 }
 
 .noteItem {

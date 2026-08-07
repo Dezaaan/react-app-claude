@@ -1,13 +1,15 @@
+import { memo } from "react";
 import styles from "./NoteItem.module.scss";
+import type { Note } from "../../types";
 
 interface NoteItemProps {
-  title: string;
+  note: Note;
 }
 
-export const NoteItem = ({ title }: NoteItemProps) => {
+export const NoteItem = memo(({ note }: NoteItemProps) => {
   return (
     <button className={styles.button} type="button">
-      {title}
+      {note.title}
     </button>
   );
-};
+});
