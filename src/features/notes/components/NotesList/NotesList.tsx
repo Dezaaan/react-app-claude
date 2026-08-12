@@ -1,9 +1,8 @@
-import { List } from "@/shared/components/List/List/List";
 import styles from "./NotesList.module.scss";
-import { ListItem } from "@/shared/components/List/ListItem/ListItem";
 import type { Note } from "../../types";
-import { NoteItem } from "../NoteItem/NoteItem";
-import { memo } from "react";
+import { memo, useCallback, useMemo } from "react";
+import { NoteRow } from "./NoteRow";
+import { List } from "react-window";
 
 type NotesListProps = {
   notes: Note[];
@@ -11,35 +10,46 @@ type NotesListProps = {
 };
 
 export const NotesList = memo(({ notes, onClickNoteItem }: NotesListProps) => {
-  const handleListClick = (event: React.MouseEvent<HTMLUListElement>) => {
-    const element = event.target as HTMLElement;
+  const handleNoteClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      const element = event.target as HTMLElement;
 
-    const noteElement = element.closest<HTMLElement>("[data-note-id]");
+      const noteElement = element.closest<HTMLElement>("[data-note-id]");
 
-    const noteId = noteElement?.dataset.noteId;
+      const noteId = noteElement?.dataset.noteId;
 
-    if (!noteId) {
-      return;
-    }
+      if (!noteId) {
+        return;
+      }
 
-    const note = notes.find((note) => note.id === noteId);
+      const note = notes.find((note) => note.id === noteId);
 
-    if (note) {
-      onClickNoteItem(note);
-    }
-  };
+      if (note) {
+        onClickNoteItem(note);
+      }
+    },
+    [notes, onClickNoteItem],
+  );
+
+  const rowProps = useMemo(
+    () => ({
+      notes,
+      handleNoteClick,
+    }),
+    [notes, handleNoteClick],
+  );
 
   return (
-    <List className={styles.notesList} onClick={handleListClick}>
-      {notes.map((note) => (
-        <ListItem
-          className={styles.noteItem}
-          data-note-id={note.id}
-          key={note.id}
-        >
-          <NoteItem note={note} />
-        </ListItem>
-      ))}
-    </List>
+    <List
+      className={styles.list}
+      rowCount={notes.length}
+      rowHeight={100}
+      rowProps={rowProps}
+      rowComponent={NoteRow}
+      style={{
+        width: "100%",
+        height: "700px",
+      }}
+    />
   );
 });
