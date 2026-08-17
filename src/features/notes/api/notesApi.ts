@@ -9,7 +9,7 @@ const generateNotes = (count: number): Note[] => {
   }));
 };
 
-const notes: Note[] = generateNotes(40000);
+const notes: Note[] = generateNotes(1000);
 
 //TODO this will be changed to api call
 export const notesApi = {

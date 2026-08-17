@@ -1,0 +1,18 @@
+.list {
+  width: 100%;
+  scrollbar-gutter: stable;
+}
+
+.row {
+  width: 100%;
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #eee;
+}
+
+.rowContent {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
