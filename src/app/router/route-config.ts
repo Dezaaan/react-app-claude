@@ -1,7 +1,5 @@
 import { lazy } from "react";
 
-import MainLayout from "@/layouts";
-
 import { ROUTES } from "./routes";
 import type { RouteConfig } from "./types";
 
@@ -12,7 +10,7 @@ const NotesPage = lazy(() => import("../../pages/Notes/NotesPage"));
 const ProfilePage = lazy(() => import("../../pages/Profile/ProfilePage"));
 const SettingsPage = lazy(() => import("../../pages/Settings/SettingsPage"));
 
-const routes: RouteConfig[] = [
+export const routeConfig: RouteConfig[] = [
   {
     path: ROUTES.HOME,
     Component: HomePage,
@@ -84,21 +82,5 @@ const routes: RouteConfig[] = [
         order: 6,
       },
     },
-  },
-];
-
-export const routeConfig: RouteConfig[] = [
-  {
-    path: "/",
-    Component: MainLayout,
-    meta: {
-      title: "Main",
-    },
-    children: routes.toSorted((a, b) => {
-      //TODO not working as expected, need to check why
-      const orderA = a.meta.navigation?.order ?? Number.MAX_SAFE_INTEGER;
-      const orderB = b.meta.navigation?.order ?? Number.MAX_SAFE_INTEGER;
-      return orderA - orderB;
-    }),
   },
 ];

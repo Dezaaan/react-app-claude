@@ -5,6 +5,7 @@ import styles from "./MainLayout.module.scss";
 import { Footer } from "../Footer/Footer/Footer";
 
 const MainLayout = () => {
+  console.log("MainLayout rendered");
   return (
     <div className={styles.layout}>
       <Header />

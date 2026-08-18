@@ -1,13 +1,16 @@
 import styles from "./NavigationMenuItems.module.scss";
-import { NavigationMenuItem } from "../NavigationMenuItem/NavigationMenuItem";
-import { menuItems } from "../../menu-items";
 import { List } from "@/shared/components/List";
+import { useNavigationItems } from "@/navigation/hooks/useNavigationItems";
+import { NavigationItem } from "@/navigation";
 
 export const NavigationMenuItems = () => {
+  const menuItems = useNavigationItems("menu");
   return (
     <List className={styles.menuItems}>
       {menuItems.map((item) => (
-        <NavigationMenuItem item={item} key={item.id} />
+        <NavigationItem className={styles.link} key={item.path} to={item.path}>
+          {item.meta.navigation?.label}
+        </NavigationItem>
       ))}
     </List>
   );
