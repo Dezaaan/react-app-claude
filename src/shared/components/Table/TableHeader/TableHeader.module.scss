@@ -1,24 +1,47 @@
 .header {
+  width: 100%;
+}
+
+.headerRow,
+.filterRow {
   display: grid;
   width: 100%;
-  box-sizing: border-box;
+}
 
-  min-height: 60px;
+.headerRow {
+  min-height: 50px;
+  align-items: center;
+  font-weight: 600;
+}
 
+.filterRow {
+  min-height: 50px;
   align-items: center;
 
   border-bottom: 2px solid #ccc;
 }
-.row {
+
+.cell {
+  min-width: 0;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  padding: 8px 12px;
+
+  border-right: 1px solid #ddd;
+}
+
+.cell:last-child {
+  border-right: none;
+}
+
+.cell input {
   width: 100%;
   box-sizing: border-box;
 
-  border-bottom: 1px solid #eee;
-}
+  padding: 6px 8px;
 
-.rowContent {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  align-items: center;
+  font-size: 13px;
 }

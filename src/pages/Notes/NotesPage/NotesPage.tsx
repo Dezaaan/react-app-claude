@@ -6,7 +6,6 @@ const NotesPage = () => {
     <div className={styles.container}>
       <h1>Notes</h1>
 
-      {/* <NotesFeature /> */}
       <NotesTable />
     </div>
   );
