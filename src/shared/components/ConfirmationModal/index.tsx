@@ -27,10 +27,10 @@ export const ConfirmationModal = ({
       <Modal.Body className={styles.body}>{body}</Modal.Body>
 
       <Modal.Footer>
-        <button onClick={onCancel} className={styles.cancel}>
+        <button type="button" onClick={onCancel} className={styles.cancel}>
           {cancelLabel}
         </button>
-        <button onClick={onConfirm} className={styles.confirm}>
+        <button type="button" onClick={onConfirm} className={styles.confirm}>
           {confirmLabel}
         </button>
       </Modal.Footer>

@@ -1,19 +1,20 @@
 import { Table } from "@/shared/components/Table/Table";
 import { useNotes } from "../../hooks/useNotes";
 import type { TableFilters } from "@/shared/components/Table/types";
-import { useCallback, useDeferredValue, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { filterNotes } from "../../helpers/filters";
 import { columns } from "./columns";
+import { useDebouncedValue } from "@/shared/hooks/useDebounceValue";
 
 export const NotesTable = () => {
   const [filters, setFilters] = useState<TableFilters>({});
   const { notes } = useNotes();
 
-  const deferredFilters = useDeferredValue(filters);
+  const debouncedFilters = useDebouncedValue(filters, 200);
 
   const filteredNotes = useMemo(
-    () => filterNotes(notes, deferredFilters, columns),
-    [notes, deferredFilters],
+    () => filterNotes(notes, debouncedFilters, columns),
+    [notes, debouncedFilters],
   );
 
   const handleFilterChange = useCallback((columnId: string, value: string) => {

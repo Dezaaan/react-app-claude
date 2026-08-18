@@ -5,12 +5,12 @@ import MainLayout from "@/layouts";
 import { ROUTES } from "./routes";
 import type { RouteConfig } from "./types";
 
-const AboutPage = lazy(() => import("../../pages/About"));
-const ContactPage = lazy(() => import("../../pages/Contact"));
-const HomePage = lazy(() => import("../../pages/Home"));
-const NotesPage = lazy(() => import("../../pages/Notes"));
-const ProfilePage = lazy(() => import("../../pages/Profile"));
-const SettingsPage = lazy(() => import("../../pages/Settings"));
+const AboutPage = lazy(() => import("../../pages/About/AboutPage"));
+const ContactPage = lazy(() => import("../../pages/Contact/ContactPage"));
+const HomePage = lazy(() => import("../../pages/Home/HomePage"));
+const NotesPage = lazy(() => import("../../pages/Notes/NotesPage"));
+const ProfilePage = lazy(() => import("../../pages/Profile/ProfilePage"));
+const SettingsPage = lazy(() => import("../../pages/Settings/SettingsPage"));
 
 const routes: RouteConfig[] = [
   {
