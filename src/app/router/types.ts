@@ -1,19 +1,23 @@
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 export type RoutePlacement = "nav" | "menu";
 
 export interface RouteNavigation {
-  placement: RoutePlacement;
   label: string;
   order: number;
+  placement?: RoutePlacement;
+  visible: boolean;
 }
+
+export type RouteAccess = "public" | "authenticated" | "admin";
+export type RouteLayout = "main" | "standalone";
 
 export interface RouteMeta {
-  title: string;
+  access: RouteAccess;
+  layout: RouteLayout;
   navigation?: RouteNavigation;
+  title: string;
 }
-
-// app/types.ts
 
 export interface RouteConfig {
   path: string;
@@ -21,3 +25,13 @@ export interface RouteConfig {
   meta: RouteMeta;
   children?: RouteConfig[];
 }
+
+export type AuthUser = {
+  id: string;
+  role: "user" | "admin";
+};
+
+export type ProtectedRouteProps = {
+  access: RouteAccess;
+  children: ReactNode;
+};

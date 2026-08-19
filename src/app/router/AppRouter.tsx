@@ -5,27 +5,48 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { routeConfig } from "./route-config";
 import MainLayout from "@/layouts";
+import { AuthProvider } from "@/features/auth/context/AuthContext";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { routeConfig } from "./route-config";
+
+const applicationRoutes = (
+  <Route path="/" element={<MainLayout />}>
+    {routeConfig
+      .filter(({ meta }) => meta.layout === "main")
+      .map(({ path, Component, meta }) => (
+        <Route
+          key={path}
+          path={path}
+          element={
+            <ProtectedRoute access={meta.access}>
+              <Component />
+            </ProtectedRoute>
+          }
+        />
+      ))}
+  </Route>
+);
+
+const standaloneRoutes = routeConfig
+  .filter(({ meta }) => meta.layout === "standalone")
+  .map(({ path, Component }) => (
+    <Route key={path} path={path} element={<Component />} />
+  ));
 
 const routes = createRoutesFromElements(
-  <Route path="/" element={<MainLayout />}>
-    {routeConfig.map(({ path, Component }) => (
-      <Route key={path} path={path} element={<Component />} />
-    ))}
-  </Route>,
+  <>
+    {applicationRoutes}
+    {standaloneRoutes}
+  </>,
 );
 
 const router = createBrowserRouter(routes);
 
 export const AppRouter = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 };
-
-// export const AppRouter = () => {
-//   return (
-//     <Suspense fallback={<div>Loading...</div>}>
-//       <Routes>{renderRoutes(routeConfig)}</Routes>
-//     </Suspense>
-//   );
-// };
