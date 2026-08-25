@@ -6,25 +6,20 @@ import {
 } from "react-router-dom";
 
 import MainLayout from "@/layouts";
-import { AuthProvider } from "@/features/auth/context/AuthContext";
-import { ProtectedRoute } from "./ProtectedRoute";
+import { AuthenticatedApp } from "@/layouts/AuthenticatedApp";
+import { authenticatedAppLoader } from "@/features/auth/loaders/authenticatedAppLoader";
+
 import { routeConfig } from "./route-config";
 
 const applicationRoutes = (
-  <Route path="/" element={<MainLayout />}>
-    {routeConfig
-      .filter(({ meta }) => meta.layout === "main")
-      .map(({ path, Component, meta }) => (
-        <Route
-          key={path}
-          path={path}
-          element={
-            <ProtectedRoute access={meta.access}>
-              <Component />
-            </ProtectedRoute>
-          }
-        />
-      ))}
+  <Route element={<AuthenticatedApp />} loader={authenticatedAppLoader}>
+    <Route path="/" element={<MainLayout />}>
+      {routeConfig
+        .filter(({ meta }) => meta.layout === "main")
+        .map(({ path, Component }) => (
+          <Route key={path} path={path} element={<Component />} />
+        ))}
+    </Route>
   </Route>
 );
 
@@ -44,9 +39,5 @@ const routes = createRoutesFromElements(
 const router = createBrowserRouter(routes);
 
 export const AppRouter = () => {
-  return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />;
 };

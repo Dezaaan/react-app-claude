@@ -1,4 +1,5 @@
-import type { ComponentType, ReactNode } from "react";
+import type { Permission } from "@/features/auth/types";
+import type { ComponentType } from "react";
 
 export type RoutePlacement = "nav" | "menu";
 
@@ -9,15 +10,33 @@ export interface RouteNavigation {
   visible: boolean;
 }
 
-export type RouteAccess = "public" | "authenticated" | "admin";
+// export type RouteAccess = "public" | "authenticated" | "admin";
+
+export type RouteAccess =
+  | {
+      type: "permission";
+    }
+  | {
+      type: "permission";
+      permission: Permission;
+    };
+
 export type RouteLayout = "main" | "standalone";
 
-export interface RouteMeta {
-  access: RouteAccess;
-  layout: RouteLayout;
-  navigation?: RouteNavigation;
+export type MainRouteMeta = {
+  layout: "main";
   title: string;
-}
+  access?: RouteAccess;
+  navigation?: RouteNavigation;
+};
+
+export type StandaloneRouteMeta = {
+  layout: "standalone";
+  title: string;
+  navigation?: RouteNavigation;
+};
+
+export type RouteMeta = MainRouteMeta | StandaloneRouteMeta;
 
 export interface RouteConfig {
   path: string;
@@ -29,9 +48,4 @@ export interface RouteConfig {
 export type AuthUser = {
   id: string;
   role: "user" | "admin";
-};
-
-export type ProtectedRouteProps = {
-  access: RouteAccess;
-  children: ReactNode;
 };

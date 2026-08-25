@@ -18,7 +18,6 @@ const applicationRoutes = [
     path: ROUTES.HOME,
     Component: HomePage,
     meta: {
-      access: "authenticated",
       layout: "main",
       title: "Home",
       navigation: {
@@ -33,7 +32,6 @@ const applicationRoutes = [
     path: ROUTES.NOTES,
     Component: NotesPage,
     meta: {
-      access: "authenticated",
       layout: "main",
       title: "Notes",
       navigation: {
@@ -48,7 +46,6 @@ const applicationRoutes = [
     path: ROUTES.ABOUT,
     Component: AboutPage,
     meta: {
-      access: "authenticated",
       layout: "main",
       title: "About",
       navigation: {
@@ -63,7 +60,6 @@ const applicationRoutes = [
     path: ROUTES.CONTACT,
     Component: ContactPage,
     meta: {
-      access: "authenticated",
       layout: "main",
       title: "Contact",
       navigation: {
@@ -78,7 +74,6 @@ const applicationRoutes = [
     path: ROUTES.PROFILE,
     Component: ProfilePage,
     meta: {
-      access: "authenticated",
       layout: "main",
       title: "Profile",
       navigation: {
@@ -93,7 +88,6 @@ const applicationRoutes = [
     path: ROUTES.SETTINGS,
     Component: SettingsPage,
     meta: {
-      access: "authenticated",
       layout: "main",
       title: "Settings",
       navigation: {
@@ -111,7 +105,6 @@ const standaloneRoutes = [
     path: ROUTES.LOGIN,
     Component: LoginPage,
     meta: {
-      access: "public",
       title: "Login",
       layout: "standalone",
       navigation: {
@@ -125,7 +118,6 @@ const standaloneRoutes = [
     path: ROUTES.FORBIDDEN,
     Component: ForbiddenPage,
     meta: {
-      access: "public",
       title: "Forbidden",
       layout: "standalone",
       navigation: {
@@ -139,7 +131,6 @@ const standaloneRoutes = [
     path: ROUTES.NOTFOUND,
     Component: NotFoundPage,
     meta: {
-      access: "public",
       title: "Not Found",
       layout: "standalone",
       navigation: {
