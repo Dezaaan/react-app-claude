@@ -1,5 +1,3 @@
-// layouts/AuthenticatedApp.tsx
-
 import { useLoaderData, Outlet } from "react-router-dom";
 import type { authenticatedAppLoader } from "@/features/auth/loaders/authenticatedAppLoader";
 import { AuthProvider } from "@/features/auth/context/AuthProvider";

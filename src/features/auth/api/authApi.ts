@@ -5,8 +5,8 @@ export const authApi = {
   getCurrentUser: async (): Promise<AuthUser | null> => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        // resolve({ id: "1", email: "user@example.com", role: "user" });
-        resolve(null);
+        resolve({ id: "1", email: "user@example.com", role: "user" });
+        // resolve(null);
       }, 500);
     });
   },

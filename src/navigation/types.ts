@@ -9,7 +9,3 @@ export interface NavigationItemProps {
   children: ReactNode;
   className?: string;
 }
-
-export interface NavigationContextValue {
-  active: boolean;
-}
