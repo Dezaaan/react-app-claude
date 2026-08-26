@@ -14,10 +14,11 @@ const notes: Note[] = generateNotes(40000);
 //TODO this will be changed to api call
 export const notesApi = {
   getNotes: async (): Promise<Note[]> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(notes);
-      }, 500);
+        // resolve(notes);
+        reject(new Error("Failed to fetch notes"));
+      }, 2000);
     });
   },
 };

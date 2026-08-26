@@ -6,14 +6,19 @@ import {
 } from "react-router-dom";
 
 import MainLayout from "@/layouts";
-import { AuthenticatedApp } from "@/layouts/AuthenticatedApp";
-import { authenticatedAppLoader } from "@/features/auth/loaders/authenticatedAppLoader";
+import { AuthenticatedApp } from "@/app/router/AuthenticatedApp";
+import { authenticatedAppLoader } from "@/app/router/loaders/authenticatedAppLoader";
 
 import { routeConfig } from "./route-config";
 import { isApplicationRoute, isStandaloneRoute } from "./types";
+import { RouteError } from "./RouteError";
 
 const applicationRoutes = (
-  <Route element={<AuthenticatedApp />} loader={authenticatedAppLoader}>
+  <Route
+    element={<AuthenticatedApp />}
+    loader={authenticatedAppLoader}
+    hydrateFallbackElement={<>Loading application...</>} // TODO need application level error component
+  >
     <Route path="/" element={<MainLayout />}>
       {routeConfig
         .filter(isApplicationRoute)
@@ -24,6 +29,7 @@ const applicationRoutes = (
               path={path}
               element={<Component />}
               loader={loader}
+              errorElement={<RouteError />}
             />
           );
         })}
@@ -43,6 +49,7 @@ const routes = createRoutesFromElements(
     {standaloneRoutes}
   </>,
 );
+
 const router = createBrowserRouter(routes);
 
 export const AppRouter = () => {

@@ -1,7 +1,7 @@
 // features/auth/loaders/authenticatedAppLoader.ts
 
 import { redirect } from "react-router-dom";
-import { authApi } from "../api/authApi";
+import { authApi } from "../../../features/auth/api/authApi";
 import { ROUTES } from "@/app/router/routes";
 
 export const authenticatedAppLoader = async () => {
