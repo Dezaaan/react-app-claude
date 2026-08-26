@@ -11,13 +11,14 @@ import { authenticatedAppLoader } from "@/app/router/loaders/authenticatedAppLoa
 
 import { routeConfig } from "./route-config";
 import { isApplicationRoute, isStandaloneRoute } from "./types";
-import { RouteError } from "./RouteError";
+import { RouteError } from "../errors/RouteError";
 
 const applicationRoutes = (
   <Route
     element={<AuthenticatedApp />}
-    loader={authenticatedAppLoader}
+    errorElement={<RouteError />}
     hydrateFallbackElement={<>Loading application...</>} // TODO need application level error component
+    loader={authenticatedAppLoader}
   >
     <Route path="/" element={<MainLayout />}>
       {routeConfig
@@ -27,8 +28,8 @@ const applicationRoutes = (
             <Route
               key={path}
               path={path}
-              element={<Component />}
               loader={loader}
+              element={<Component />}
               errorElement={<RouteError />}
             />
           );

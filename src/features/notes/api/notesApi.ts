@@ -1,4 +1,6 @@
+import { ERROR_CODES } from "@/app/errors/errorCodes";
 import type { Note } from "../types";
+import { AppError } from "@/app/errors/AppError";
 
 const generateNotes = (count: number): Note[] => {
   return Array.from({ length: count }, (_, index) => ({
@@ -16,9 +18,15 @@ export const notesApi = {
   getNotes: async (): Promise<Note[]> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        // resolve(notes);
-        reject(new Error("Failed to fetch notes"));
-      }, 2000);
+        reject(
+          new AppError(
+            "Failed to fetch notes",
+            ERROR_CODES.SERVER_ERROR,
+            500,
+            "Unable to load your notes.",
+          ),
+        );
+      }, 3000);
     });
   },
 };
