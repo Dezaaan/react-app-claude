@@ -4,3 +4,7 @@ export type Note = {
   content: string;
   createdAt: string;
 };
+
+export type NotesFeatureProps = {
+  notes: Note[];
+};

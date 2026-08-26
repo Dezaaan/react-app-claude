@@ -1,9 +1,12 @@
 import { NotesFeature } from "@/features/notes/components/NotesFeature/NotesFeature";
+import type { notesLoader } from "@/features/notes/loaders/notesLoader";
 import { ConfirmationModal } from "@/shared/components/ConfirmationModal";
 import { useModal } from "@/shared/components/Modal";
+import { useLoaderData } from "react-router-dom";
 
 const HomePage = () => {
   const { isModalOpen, closeModal } = useModal();
+  const { notes } = useLoaderData<typeof notesLoader>();
 
   return (
     <div>
@@ -18,7 +21,7 @@ const HomePage = () => {
         onConfirm={() => {}}
         title="Delete note"
       />
-      <NotesFeature />
+      <NotesFeature notes={notes} />
     </div>
   );
 };

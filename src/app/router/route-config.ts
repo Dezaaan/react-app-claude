@@ -2,6 +2,7 @@ import { lazy } from "react";
 
 import { ROUTES } from "./routes";
 import type { RouteConfig } from "./types";
+import { notesLoader } from "@/features/notes/loaders/notesLoader";
 
 const AboutPage = lazy(() => import("../../pages/About/AboutPage"));
 const ContactPage = lazy(() => import("../../pages/Contact/ContactPage"));
@@ -17,8 +18,9 @@ const applicationRoutes = [
   {
     path: ROUTES.HOME,
     Component: HomePage,
+    loader: notesLoader,
     meta: {
-      layout: "main",
+      layout: "application",
       title: "Home",
       navigation: {
         label: "Home",
@@ -31,8 +33,9 @@ const applicationRoutes = [
   {
     path: ROUTES.NOTES,
     Component: NotesPage,
+    loader: notesLoader,
     meta: {
-      layout: "main",
+      layout: "application",
       title: "Notes",
       navigation: {
         label: "Notes",
@@ -45,8 +48,9 @@ const applicationRoutes = [
   {
     path: ROUTES.ABOUT,
     Component: AboutPage,
+    loader: () => {},
     meta: {
-      layout: "main",
+      layout: "application",
       title: "About",
       navigation: {
         label: "About",
@@ -59,8 +63,9 @@ const applicationRoutes = [
   {
     path: ROUTES.CONTACT,
     Component: ContactPage,
+    loader: () => {},
     meta: {
-      layout: "main",
+      layout: "application",
       title: "Contact",
       navigation: {
         label: "Contact",
@@ -73,8 +78,9 @@ const applicationRoutes = [
   {
     path: ROUTES.PROFILE,
     Component: ProfilePage,
+    loader: () => {},
     meta: {
-      layout: "main",
+      layout: "application",
       title: "Profile",
       navigation: {
         label: "Profile",
@@ -87,8 +93,9 @@ const applicationRoutes = [
   {
     path: ROUTES.SETTINGS,
     Component: SettingsPage,
+    loader: () => {},
     meta: {
-      layout: "main",
+      layout: "application",
       title: "Settings",
       navigation: {
         label: "Settings",
