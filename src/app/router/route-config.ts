@@ -1,18 +1,17 @@
-import { lazy } from "react";
-
-import { ROUTES } from "./routes";
 import type { RouteConfig } from "./types";
+import { ROUTES } from "./routes";
+import { lazy } from "react";
 import { notesLoader } from "@/features/notes/loaders/notesLoader";
 
 const AboutPage = lazy(() => import("../../pages/About/AboutPage"));
 const ContactPage = lazy(() => import("../../pages/Contact/ContactPage"));
+const ForbiddenPage = lazy(() => import("../../pages/Forbidden/ForbiddenPage"));
 const HomePage = lazy(() => import("../../pages/Home/HomePage"));
+const LoginPage = lazy(() => import("../../pages/Login/LoginPage"));
+const NotFoundPage = lazy(() => import("../../pages/NotFound/NotFoundPage"));
 const NotesPage = lazy(() => import("../../pages/Notes/NotesPage"));
 const ProfilePage = lazy(() => import("../../pages/Profile/ProfilePage"));
 const SettingsPage = lazy(() => import("../../pages/Settings/SettingsPage"));
-const LoginPage = lazy(() => import("../../pages/Login/LoginPage"));
-const ForbiddenPage = lazy(() => import("../../pages/Forbidden/ForbiddenPage"));
-const NotFoundPage = lazy(() => import("../../pages/NotFound/NotFoundPage"));
 
 const applicationRoutes = [
   {

@@ -1,0 +1,14 @@
+.page {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+
+  overflow-y: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: stretch;
+  margin: 0 auto;
+  padding: 24px;
+}

@@ -1,6 +1,6 @@
 import styles from "./NavigationMenu.module.scss";
 import { ListItem } from "@/shared/components/List";
-import { NavigationMenuItems } from "../NavigationMenuItems/NavigationMenuItems";
+import { NavigationMenuItems } from "./NavigationMenuItems/NavigationMenuItems";
 import { cn } from "@/shared/utils/cn";
 import { useCallback, useRef, useState } from "react";
 import { useClickOutside } from "@/navigation/hooks/useClickOutside";

@@ -1,8 +1,7 @@
-import { List } from "@/shared/components/List";
 import styles from "./Footer.module.scss";
-import { FooterColumn } from "../FooterColumn/FooterColumn";
-
-import { footerConfig } from "../footer-config";
+import { FooterColumn } from "./FooterColumn/FooterColumn";
+import { List } from "@/shared/components/List";
+import { footerConfig } from "./footer-config";
 
 export const Footer = () => {
   return (
