@@ -47,7 +47,6 @@ const applicationRoutes = [
   {
     path: ROUTES.ABOUT,
     Component: AboutPage,
-    loader: () => {},
     meta: {
       layout: "application",
       title: "About",
@@ -62,7 +61,6 @@ const applicationRoutes = [
   {
     path: ROUTES.CONTACT,
     Component: ContactPage,
-    loader: () => {},
     meta: {
       layout: "application",
       title: "Contact",
@@ -77,7 +75,6 @@ const applicationRoutes = [
   {
     path: ROUTES.PROFILE,
     Component: ProfilePage,
-    loader: () => {},
     meta: {
       layout: "application",
       title: "Profile",
@@ -92,7 +89,6 @@ const applicationRoutes = [
   {
     path: ROUTES.SETTINGS,
     Component: SettingsPage,
-    loader: () => {},
     meta: {
       layout: "application",
       title: "Settings",
@@ -148,4 +144,4 @@ const standaloneRoutes = [
   },
 ] satisfies RouteConfig[];
 
-export const routeConfig = [...applicationRoutes, ...standaloneRoutes];
+export const routeConfig: RouteConfig[] = [...applicationRoutes, ...standaloneRoutes];
