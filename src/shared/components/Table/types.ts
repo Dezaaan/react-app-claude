@@ -23,6 +23,12 @@ export type TableColumn<T> = {
   searchable?: boolean;
   width?: string;
   render?: (value: T[keyof T], row: T) => ReactNode;
+  /**
+   * Text the column filter matches against. Defaults to `String(value)`.
+   * Set this when `render` displays something different from the raw value
+   * (e.g. a formatted date), so users can search for what they see.
+   */
+  filterValue?: (value: T[keyof T], row: T) => string;
 };
 
 export type TableFilters = Record<string, string>;

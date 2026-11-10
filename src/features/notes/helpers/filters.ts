@@ -9,17 +9,24 @@ export const filterNotes = (
   filters: TableFilters,
   columns: TableColumn<Note>[],
 ) => {
+  // Resolve active filters once instead of once per note.
+  const activeFilters = columns.flatMap((column) => {
+    const query = filters[column.id]?.trim().toLowerCase();
+    return query ? [{ column, query }] : [];
+  });
+
+  if (activeFilters.length === 0) {
+    return notes;
+  }
+
   return notes.filter((note) =>
-    columns.every((column) => {
-      const filter = filters[column.id];
-
-      if (!filter) {
-        return true;
-      }
-
+    activeFilters.every(({ column, query }) => {
       const value = note[column.accessor];
+      const text = column.filterValue
+        ? column.filterValue(value, note)
+        : String(value);
 
-      return String(value).toLowerCase().includes(filter.toLowerCase());
+      return text.toLowerCase().includes(query);
     }),
   );
 };
