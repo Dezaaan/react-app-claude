@@ -1,8 +1,7 @@
-// features/auth/hooks/useAuth.ts
-
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
+/** The logged-in user and their permissions. Only usable inside AuthProvider. */
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

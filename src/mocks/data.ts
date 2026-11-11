@@ -9,7 +9,10 @@ export const mockUser: AuthUser = {
   role: "user",
 };
 
-export const mockPermissions: Permission[] = [];
+export const mockPermissions: Permission[] = ["notes.view", "notes.edit"];
+
+/** The mock login accepts any email with this password. */
+export const MOCK_PASSWORD = "password";
 
 const HOUR = 60 * 60 * 1000;
 

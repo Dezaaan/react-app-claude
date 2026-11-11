@@ -2,6 +2,7 @@ import type { RouteConfig } from "./types";
 import { ROUTES } from "./routes";
 import { lazy } from "react";
 import { notesLoader } from "@/features/notes/loaders/notesLoader";
+import { loginAction, loginLoader } from "@/features/auth/routes/login";
 
 const AboutPage = lazy(() => import("../../pages/About/AboutPage"));
 const ContactPage = lazy(() => import("../../pages/Contact/ContactPage"));
@@ -34,6 +35,7 @@ const applicationRoutes = [
     Component: NotesPage,
     loader: notesLoader,
     meta: {
+      access: { type: "permission", permission: "notes.view" },
       layout: "application",
       title: "Notes",
       navigation: {
@@ -106,6 +108,8 @@ const standaloneRoutes = [
   {
     path: ROUTES.LOGIN,
     Component: LoginPage,
+    loader: loginLoader,
+    action: loginAction,
     meta: {
       title: "Login",
       layout: "standalone",

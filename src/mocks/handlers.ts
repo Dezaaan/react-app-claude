@@ -1,15 +1,58 @@
 import { delay, http, HttpResponse } from "msw";
 
+import type { LoginCredentials } from "@/features/auth/types";
 import { apiUrl } from "@/shared/api/httpClient";
-import { getMockNotes, mockPermissions, mockUser } from "./data";
+import { getMockNotes, MOCK_PASSWORD, mockPermissions, mockUser } from "./data";
+import { mockSession } from "./session";
+
+const unauthorized = () =>
+  HttpResponse.json({ message: "Not authenticated" }, { status: 401 });
 
 /** The "happy path" backend used in development and tests. */
 export const handlers = [
-  http.get(apiUrl("/auth/me"), () => HttpResponse.json(mockUser)),
+  http.get(apiUrl("/auth/me"), () =>
+    mockSession.isLoggedIn() ? HttpResponse.json(mockUser) : unauthorized(),
+  ),
 
   http.get(apiUrl("/auth/permissions"), () =>
-    HttpResponse.json(mockPermissions),
+    mockSession.isLoggedIn()
+      ? HttpResponse.json(mockPermissions)
+      : unauthorized(),
   ),
+
+  // Any email works; the password must be MOCK_PASSWORD ("password").
+  http.post(apiUrl("/auth/login"), async ({ request }) => {
+    await delay(300);
+    const { email, password } = (await request.json()) as LoginCredentials;
+
+    if (!email || !password) {
+      return HttpResponse.json(
+        {
+          message: "Email and password are required.",
+          errors: {
+            ...(!email && { email: ["Email is required."] }),
+            ...(!password && { password: ["Password is required."] }),
+          },
+        },
+        { status: 422 },
+      );
+    }
+
+    if (password !== MOCK_PASSWORD) {
+      return HttpResponse.json(
+        { message: "Invalid credentials" },
+        { status: 401 },
+      );
+    }
+
+    mockSession.logIn();
+    return HttpResponse.json({ ...mockUser, email });
+  }),
+
+  http.post(apiUrl("/auth/logout"), () => {
+    mockSession.logOut();
+    return new HttpResponse(null, { status: 204 });
+  }),
 
   http.get(apiUrl("/notes"), async () => {
     await delay(300);
@@ -23,11 +66,23 @@ export const handlers = [
  * e.g. http://localhost:5173/notes?mock=notes-server-error
  */
 export const scenarios = {
-  // GET /auth/me -> 401: the app treats this as "not logged in".
+  // Start logged out. Ends the mock session once, then the normal handlers
+  // take over, so logging in from the form works afterwards.
   "logged-out": [
-    http.get(apiUrl("/auth/me"), () =>
-      HttpResponse.json({ message: "Not authenticated" }, { status: 401 }),
+    http.get(
+      apiUrl("/auth/me"),
+      () => {
+        mockSession.logOut();
+        return unauthorized();
+      },
+      { once: true },
     ),
+  ],
+
+  // Logged in, but allowed nothing: the Notes link disappears and /notes
+  // shows the permission error.
+  "no-permissions": [
+    http.get(apiUrl("/auth/permissions"), () => HttpResponse.json([])),
   ],
 
   // No response at all, like being offline or the server being down.

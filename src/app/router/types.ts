@@ -1,6 +1,6 @@
-import type { Permission } from "@/features/auth/types";
+import type { AccessRequirement } from "@/features/auth/types";
 import type { ComponentType } from "react";
-import type { RouteObject } from "react-router-dom";
+import type { LoaderFunction, RouteObject } from "react-router-dom";
 
 export type RoutePlacement = "nav" | "menu";
 
@@ -11,14 +11,8 @@ export interface RouteNavigation {
   visible: boolean;
 }
 
-export type RouteAccess =
-  | {
-      type: "permission";
-    }
-  | {
-      type: "permission";
-      permission: Permission;
-    };
+/** What a user needs to open a route. See `canAccess`. */
+export type RouteAccess = AccessRequirement;
 
 export type RouteLayout = "application" | "standalone";
 
@@ -35,10 +29,13 @@ export type StandaloneRouteMeta = {
   title: string;
 };
 
-// Every config route must define a path and a component (RouteObject makes both optional).
+// Every config route must define a path and a component (RouteObject makes
+// both optional). `loader` is narrowed to a function: RouteObject also allows
+// `true`, which is for server rendering and not used here.
 type ConfigRouteObject = RouteObject & {
   path: string;
   Component: ComponentType;
+  loader?: LoaderFunction;
 };
 
 export type ApplicationRoute = ConfigRouteObject & {

@@ -1,10 +1,17 @@
+import { LoginForm } from "@/features/auth/components/LoginForm/LoginForm";
+import styles from "./LoginPage.module.scss";
+
 const LoginPage = () => {
   return (
-    <div>
-      <h1>Login</h1>
+    <main className={styles.page}>
+      <div className={styles.card}>
+        <h1>Login</h1>
 
-      <p>Please enter your credentials to log in.</p>
-    </div>
+        <p>Please enter your credentials to log in.</p>
+
+        <LoginForm />
+      </div>
+    </main>
   );
 };
 
