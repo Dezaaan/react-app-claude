@@ -1,31 +1,44 @@
-import { describe, expect, it, vi } from "vitest";
+import { http, HttpResponse } from "msw";
+import { describe, expect, it } from "vitest";
 
-import { authApi } from "@/features/auth/api/authApi";
-import type { AuthUser } from "@/features/auth/types";
+import { mockUser } from "@/mocks/data";
+import { scenarios } from "@/mocks/handlers";
+import { server } from "@/mocks/server";
+import { apiUrl } from "@/shared/api/httpClient";
+import { loaderArgs } from "@/test/utils";
 import { authenticatedAppLoader } from "./authenticatedAppLoader";
-
-const user: AuthUser = { id: "1", email: "user@example.com", role: "user" };
 
 describe("authenticatedAppLoader", () => {
   it("returns the user and their permissions", async () => {
-    vi.spyOn(authApi, "getCurrentUser").mockResolvedValue(user);
-    vi.spyOn(authApi, "getPermissions").mockResolvedValue(["notes.view"]);
+    server.use(
+      http.get(apiUrl("/auth/permissions"), () =>
+        HttpResponse.json(["notes.view"]),
+      ),
+    );
 
-    await expect(authenticatedAppLoader()).resolves.toEqual({
-      user,
+    await expect(authenticatedAppLoader(loaderArgs())).resolves.toEqual({
+      user: mockUser,
       permissions: ["notes.view"],
     });
   });
 
   it("redirects to /login when there is no user", async () => {
-    vi.spyOn(authApi, "getCurrentUser").mockResolvedValue(null);
-    const getPermissions = vi.spyOn(authApi, "getPermissions");
+    server.use(...scenarios["logged-out"]);
+    let permissionsRequested = false;
+    server.use(
+      http.get(apiUrl("/auth/permissions"), () => {
+        permissionsRequested = true;
+        return HttpResponse.json([]);
+      }),
+    );
 
-    const thrown = await authenticatedAppLoader().catch((error) => error);
+    const thrown = await authenticatedAppLoader(loaderArgs()).catch(
+      (error) => error,
+    );
 
     expect(thrown).toBeInstanceOf(Response);
     expect(thrown.status).toBe(302);
     expect(thrown.headers.get("Location")).toBe("/login");
-    expect(getPermissions).not.toHaveBeenCalled();
+    expect(permissionsRequested).toBe(false);
   });
 });

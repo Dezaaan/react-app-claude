@@ -1,33 +1,9 @@
-// import { ERROR_CODES } from "@/app/errors/errorCodes";
+import { httpClient } from "@/shared/api/httpClient";
 import type { Note } from "../types";
-// import { AppError } from "@/app/errors/AppError";
 
-const generateNotes = (count: number): Note[] => {
-  return Array.from({ length: count }, (_, index) => ({
-    id: crypto.randomUUID(),
-    title: `Note ${index + 1}`,
-    content: `This is the content of note ${index + 1}`,
-    createdAt: new Date().toISOString(),
-  }));
-};
+type RequestConfig = { signal?: AbortSignal };
 
-const notes: Note[] = generateNotes(100000);
-
-//TODO this will be changed to api call
 export const notesApi = {
-  getNotes: async (): Promise<Note[]> => {
-    return new Promise((resolve) => {
-      resolve(notes);
-      // setTimeout(() => {
-      //   reject(
-      //     new AppError(
-      //       "Failed to fetch notes",
-      //       ERROR_CODES.SERVER_ERROR,
-      //       500,
-      //       "Unable to load your notes.",
-      //     ),
-      //   );
-      // }, 3000);
-    });
-  },
+  getNotes: ({ signal }: RequestConfig = {}) =>
+    httpClient.get<Note[]>("/notes", { signal }),
 };

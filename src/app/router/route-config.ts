@@ -144,4 +144,7 @@ const standaloneRoutes = [
   },
 ] satisfies RouteConfig[];
 
-export const routeConfig: RouteConfig[] = [...applicationRoutes, ...standaloneRoutes];
+export const routeConfig: RouteConfig[] = [
+  ...applicationRoutes,
+  ...standaloneRoutes,
+];

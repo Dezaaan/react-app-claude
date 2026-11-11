@@ -1,12 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { AppError } from "@/app/errors/AppError";
-import { ERROR_CODES } from "@/app/errors/errorCodes";
-import { authApi } from "@/features/auth/api/authApi";
-import { notesApi } from "@/features/notes/api/notesApi";
+import { scenarios } from "@/mocks/handlers";
+import { server } from "@/mocks/server";
 import { appRoutes } from "./appRoutes";
+
+// These tests mock only the network (via MSW), so each one runs the real
+// chain: route -> loader -> API module -> httpClient -> AppError -> RouteError.
 
 // Lazy pages are imported on first render, which can take a moment.
 const LOAD_TIMEOUT = { timeout: 5000 };
@@ -18,15 +19,6 @@ const renderAt = (path: string) => {
 };
 
 describe("app routes", () => {
-  beforeEach(() => {
-    vi.spyOn(authApi, "getCurrentUser").mockResolvedValue({
-      id: "1",
-      email: "user@example.com",
-      role: "user",
-    });
-    vi.spyOn(authApi, "getPermissions").mockResolvedValue([]);
-  });
-
   it("renders an application page inside the main layout", async () => {
     renderAt("/about");
 
@@ -40,8 +32,8 @@ describe("app routes", () => {
     expect(screen.getByRole("navigation")).toBeInTheDocument();
   });
 
-  it("redirects to the login page when there is no user", async () => {
-    vi.mocked(authApi.getCurrentUser).mockResolvedValue(null);
+  it("redirects to the login page when the server answers 401", async () => {
+    server.use(...scenarios["logged-out"]);
 
     const router = renderAt("/about");
 
@@ -55,10 +47,8 @@ describe("app routes", () => {
     expect(router.state.location.pathname).toBe("/login");
   });
 
-  it("shows a network error when the user can't be loaded", async () => {
-    vi.mocked(authApi.getCurrentUser).mockRejectedValue(
-      new TypeError("Failed to fetch"),
-    );
+  it("shows a network error when the server can't be reached", async () => {
+    server.use(...scenarios.offline);
 
     renderAt("/about");
 
@@ -67,23 +57,29 @@ describe("app routes", () => {
     ).toHaveTextContent("Unable to connect to the server.");
   });
 
-  it("shows a page's loader error inside the layout", async () => {
-    vi.spyOn(notesApi, "getNotes").mockRejectedValue(
-      new AppError(
-        "Failed to fetch notes",
-        ERROR_CODES.SERVER_ERROR,
-        500,
-        "Unable to load your notes.",
-      ),
+  it("shows a page's server error inside the layout", async () => {
+    server.use(...scenarios["notes-server-error"]);
+
+    renderAt("/notes");
+
+    const alert = await screen.findByRole("alert", {}, LOAD_TIMEOUT);
+    expect(alert).toHaveTextContent(
+      "The server ran into a problem. Please try again later.",
     );
+    // The server's internal message stays out of the UI.
+    expect(alert).not.toHaveTextContent("Database connection lost");
+    // The error is scoped to the page, so the navigation stays usable.
+    expect(screen.getByRole("navigation")).toBeInTheDocument();
+  });
+
+  it("shows a permission error when the API answers 403", async () => {
+    server.use(...scenarios["notes-forbidden"]);
 
     renderAt("/notes");
 
     expect(
       await screen.findByRole("alert", {}, LOAD_TIMEOUT),
-    ).toHaveTextContent("Unable to load your notes.");
-    // The error is scoped to the page, so the navigation stays usable.
-    expect(screen.getByRole("navigation")).toBeInTheDocument();
+    ).toHaveTextContent("You don't have permission to access this page.");
   });
 
   it("renders the not-found page for unknown paths", async () => {
