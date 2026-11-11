@@ -1,22 +1,12 @@
-import { render, screen } from "@testing-library/react";
-import { RouterProvider, createMemoryRouter } from "react-router-dom";
+import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { scenarios } from "@/mocks/handlers";
 import { server } from "@/mocks/server";
-import { appRoutes } from "./appRoutes";
+import { LOAD_TIMEOUT, renderApp as renderAt } from "@/test/utils";
 
 // These tests mock only the network (via MSW), so each one runs the real
 // chain: route -> loader -> API module -> httpClient -> AppError -> RouteError.
-
-// Lazy pages are imported on first render, which can take a moment.
-const LOAD_TIMEOUT = { timeout: 5000 };
-
-const renderAt = (path: string) => {
-  const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
-  render(<RouterProvider router={router} />);
-  return router;
-};
 
 describe("app routes", () => {
   it("renders an application page inside the main layout", async () => {
@@ -45,6 +35,7 @@ describe("app routes", () => {
       ),
     ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe("/login");
+    expect(router.state.location.search).toBe("?redirectTo=%2Fabout");
   });
 
   it("shows a network error when the server can't be reached", async () => {

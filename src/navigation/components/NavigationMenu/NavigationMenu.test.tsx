@@ -1,32 +1,34 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
+import { renderWithAuth } from "@/test/utils";
 import { NavigationMenu } from "./NavigationMenu";
 
 const renderMenu = () =>
-  render(
-    <MemoryRouter>
+  renderWithAuth(
+    <>
       <p>Outside</p>
       <NavigationMenu />
-    </MemoryRouter>,
+    </>,
   );
 
 const trigger = () => screen.getByRole("button", { name: "Open menu" });
 
 describe("NavigationMenu", () => {
-  it("opens with the menu routes, in order", async () => {
+  it("opens with the user, the menu routes in order, and Log out", async () => {
     renderMenu();
     expect(trigger()).toHaveAttribute("aria-expanded", "false");
 
     await userEvent.click(trigger());
 
     expect(trigger()).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("user@example.com")).toBeInTheDocument();
     const items = within(screen.getByRole("list")).getAllByRole("listitem");
     expect(items.map((item) => item.textContent)).toEqual([
       "Profile",
       "Settings",
+      "Log out",
     ]);
   });
 

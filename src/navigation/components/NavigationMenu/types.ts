@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export type NavigationMenuItemConfig =
   | {
       id: string;
@@ -16,5 +14,6 @@ export type NavigationMenuItemConfig =
 
 export type NavigationMenuItemProps = {
   item: NavigationMenuItemConfig;
-  children?: ReactNode;
+  /** Called when the item is chosen, e.g. to close the menu. */
+  onSelect?: () => void;
 };

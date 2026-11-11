@@ -4,6 +4,7 @@ export const ROUTES = {
   FORBIDDEN: "/forbidden",
   HOME: "/",
   LOGIN: "/login",
+  LOGOUT: "/logout",
   NOTES: "/notes",
   PROFILE: "/profile",
   SETTINGS: "/settings",

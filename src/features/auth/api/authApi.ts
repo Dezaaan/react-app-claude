@@ -1,7 +1,7 @@
 import { AppError } from "@/app/errors/AppError";
 import { ERROR_CODES } from "@/app/errors/errorCodes";
 import { httpClient } from "@/shared/api/httpClient";
-import type { AuthUser, Permission } from "../types";
+import type { AuthUser, LoginCredentials, Permission } from "../types";
 
 type RequestConfig = { signal?: AbortSignal };
 
@@ -25,4 +25,11 @@ export const authApi = {
 
   getPermissions: ({ signal }: RequestConfig = {}) =>
     httpClient.get<Permission[]>("/auth/permissions", { signal }),
+
+  /** Starts a session; the backend is expected to set a session cookie. */
+  login: (credentials: LoginCredentials, { signal }: RequestConfig = {}) =>
+    httpClient.post<AuthUser>("/auth/login", credentials, { signal }),
+
+  logout: ({ signal }: RequestConfig = {}) =>
+    httpClient.post<void>("/auth/logout", undefined, { signal }),
 };

@@ -1,21 +1,17 @@
 import { redirect, type LoaderFunctionArgs } from "react-router-dom";
-import { authApi } from "@/features/auth/api/authApi";
-import { ROUTES } from "@/app/router/routes";
+
+import { loginUrl } from "@/features/auth/redirects";
+import { getSession } from "@/features/auth/session";
 
 export const authenticatedAppLoader = async ({
   request,
 }: LoaderFunctionArgs) => {
-  const { signal } = request;
-  const user = await authApi.getCurrentUser({ signal });
+  const session = await getSession();
 
-  if (!user) {
-    throw redirect(ROUTES.LOGIN);
+  if (!session) {
+    const { pathname, search } = new URL(request.url);
+    throw redirect(loginUrl(pathname + search));
   }
 
-  const permissions = await authApi.getPermissions({ signal });
-
-  return {
-    user,
-    permissions,
-  };
+  return session;
 };
