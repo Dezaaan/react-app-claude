@@ -31,5 +31,6 @@ export const columns: TableColumn<Note>[] = [
     width: "1fr",
     searchable: true,
     render: (value) => formatDate(String(value)),
+    filterValue: (value) => formatDate(String(value)),
   },
 ];

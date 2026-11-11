@@ -1,4 +1,5 @@
 .page {
+  position: relative;
   flex: 1;
   min-width: 0;
   min-height: 0;
@@ -11,4 +12,55 @@
   max-width: stretch;
   margin: 0 auto;
   padding: 24px;
+
+  transition: opacity 150ms ease;
+}
+
+// Dim the outgoing page while the next one loads.
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+// Indeterminate progress bar pinned to the top of the page area.
+.progress {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  height: 3px;
+  margin-bottom: -3px;
+  overflow: hidden;
+
+  background: var(--accent-bg);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+
+    background: var(--accent);
+    animation: progress 1s ease-in-out infinite;
+  }
+}
+
+@keyframes progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    transition: none;
+  }
+
+  .progress::after {
+    width: 100%;
+    animation: none;
+  }
 }
