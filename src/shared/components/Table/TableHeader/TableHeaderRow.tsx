@@ -6,9 +6,14 @@ export const TableHeaderRow = <T,>({
   gridTemplateColumns,
 }: TableHeaderRowProps<T>) => {
   return (
-    <div className={styles.headerRow} style={{ gridTemplateColumns }}>
+    <div
+      role="row"
+      aria-rowindex={1}
+      className={styles.headerRow}
+      style={{ gridTemplateColumns }}
+    >
       {columns.map((column) => (
-        <div key={column.id} className={styles.cell}>
+        <div key={column.id} role="columnheader" className={styles.cell}>
           {column.header}
         </div>
       ))}

@@ -6,6 +6,8 @@ import { columns } from "./columns";
 import { useDebouncedValue } from "@/shared/hooks/useDebounceValue";
 import type { NotesFeatureProps } from "../../types";
 
+const formatCount = (count: number) => count.toLocaleString("en-US");
+
 export const NotesTable = ({ notes }: NotesFeatureProps) => {
   const [filters, setFilters] = useState<TableFilters>({});
 
@@ -24,13 +26,22 @@ export const NotesTable = ({ notes }: NotesFeatureProps) => {
   }, []);
 
   return (
-    <Table>
-      <Table.Header
-        columns={columns}
-        filters={filters}
-        onFilterChange={handleFilterChange}
-      />
-      <Table.Body data={filteredNotes} columns={columns} />
-    </Table>
+    <>
+      {/* Announced after filtering, so screen reader users hear the result. */}
+      <p role="status">
+        {filteredNotes.length === notes.length
+          ? `${formatCount(notes.length)} notes`
+          : `Showing ${formatCount(filteredNotes.length)} of ${formatCount(notes.length)} notes`}
+      </p>
+
+      <Table aria-label="Notes" rowCount={filteredNotes.length}>
+        <Table.Header
+          columns={columns}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+        />
+        <Table.Body data={filteredNotes} columns={columns} />
+      </Table>
+    </>
   );
 };

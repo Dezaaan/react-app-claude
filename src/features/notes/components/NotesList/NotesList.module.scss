@@ -1,7 +1,7 @@
-.notesList {
+.list {
   width: 100%;
-  align-items: center;
 
-  height: 700px;
-  overflow-y: auto;
+  // Fill the window below the page title, but never shrink below a usable size.
+  height: max(320px, calc(100vh - 16rem));
+  height: max(320px, calc(100dvh - 16rem));
 }

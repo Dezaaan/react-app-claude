@@ -10,3 +10,16 @@
 
   z-index: 1000;
 }
+
+.modal {
+  // Stay usable on small screens and when zoomed in.
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+
+  // Focus lands on the dialog itself only when it has nothing focusable.
+  &:focus {
+    outline: none;
+  }
+}

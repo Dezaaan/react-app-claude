@@ -1,5 +1,11 @@
 .list {
   width: 100%;
+
+  // Fill the window below the page header, table header and row count,
+  // but never shrink below a usable size.
+  height: max(320px, calc(100vh - 20rem));
+  height: max(320px, calc(100dvh - 20rem));
+
   scrollbar-gutter: stable;
 }
 
