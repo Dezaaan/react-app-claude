@@ -1,11 +1,9 @@
-import type { CSSProperties, MouseEventHandler } from "react";
+import type { MouseEventHandler } from "react";
 import { type RowComponentProps } from "react-window";
 import type { Note } from "../../types";
 import { NoteItem } from "../NoteItem/NoteItem";
 
-export type NoteRowProps = {
-  index: number;
-  style: CSSProperties;
+type NoteRowData = {
   notes: Note[];
   handleNoteClick: MouseEventHandler<HTMLButtonElement>;
 };
@@ -15,10 +13,7 @@ export const NoteRow = ({
   style,
   notes,
   handleNoteClick,
-}: RowComponentProps<{
-  notes: Note[];
-  handleNoteClick: MouseEventHandler<HTMLButtonElement>;
-}>) => {
+}: RowComponentProps<NoteRowData>) => {
   const note = notes[index];
   return (
     <div style={style}>

@@ -1,4 +1,5 @@
 import type { Permission } from "@/features/auth/types";
+import type { ComponentType } from "react";
 import type { RouteObject } from "react-router-dom";
 
 export type RoutePlacement = "nav" | "menu";
@@ -34,11 +35,17 @@ export type StandaloneRouteMeta = {
   title: string;
 };
 
-export type ApplicationRoute = RouteObject & {
+// Every config route must define a path and a component (RouteObject makes both optional).
+type ConfigRouteObject = RouteObject & {
+  path: string;
+  Component: ComponentType;
+};
+
+export type ApplicationRoute = ConfigRouteObject & {
   meta: ApplicationRouteMeta;
 };
 
-export type StandaloneRoute = RouteObject & {
+export type StandaloneRoute = ConfigRouteObject & {
   meta: StandaloneRouteMeta;
 };
 

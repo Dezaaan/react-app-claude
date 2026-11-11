@@ -16,7 +16,7 @@ const notes: Note[] = generateNotes(100000);
 //TODO this will be changed to api call
 export const notesApi = {
   getNotes: async (): Promise<Note[]> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(notes);
       // setTimeout(() => {
       //   reject(
