@@ -8,4 +8,5 @@ export interface NavigationItemProps {
   to: string;
   children: ReactNode;
   className?: string;
+  onClick?: () => void;
 }
