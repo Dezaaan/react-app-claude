@@ -1,20 +1,28 @@
+import { AppError } from "@/app/errors/AppError";
+import { ERROR_CODES } from "@/app/errors/errorCodes";
+import { httpClient } from "@/shared/api/httpClient";
 import type { AuthUser, Permission } from "../types";
 
-//TODO this will be changed to api call
+type RequestConfig = { signal?: AbortSignal };
+
 export const authApi = {
-  getCurrentUser: async (): Promise<AuthUser | null> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ id: "1", email: "user@example.com", role: "user" });
-        // resolve(null);
-      }, 500);
-    });
+  /** Returns null when nobody is logged in (the server answers 401). */
+  getCurrentUser: async ({
+    signal,
+  }: RequestConfig = {}): Promise<AuthUser | null> => {
+    try {
+      return await httpClient.get<AuthUser>("/auth/me", { signal });
+    } catch (error) {
+      if (
+        error instanceof AppError &&
+        error.code === ERROR_CODES.UNAUTHORIZED
+      ) {
+        return null;
+      }
+      throw error;
+    }
   },
-  getPermissions: async (): Promise<Permission[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([]);
-      }, 500);
-    });
-  },
+
+  getPermissions: ({ signal }: RequestConfig = {}) =>
+    httpClient.get<Permission[]>("/auth/permissions", { signal }),
 };
