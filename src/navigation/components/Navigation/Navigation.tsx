@@ -2,17 +2,12 @@
 
 import styles from "./Navigation.module.scss";
 import type { NavigationProps } from "@/navigation/types";
-import { List } from "@/shared/components/List/List/List";
 import { NavigationItem } from "../NavigationItem/NavigationItem";
 import { NavigationLinks } from "../NavigationLinks/NavigationLinks";
 import { NavigationMenu } from "../NavigationMenu/NavigationMenu";
 
 export const Navigation = ({ children }: NavigationProps) => {
-  return (
-    <nav className={styles.navigation}>
-      <List variant="row">{children}</List>
-    </nav>
-  );
+  return <nav className={styles.navigation}>{children}</nav>;
 };
 
 Navigation.Item = NavigationItem;

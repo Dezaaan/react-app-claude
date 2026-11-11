@@ -1,9 +1,5 @@
 .navigation {
   display: flex;
   align-items: center;
-}
-
-.navigationList {
-  display: flex;
-  flex-direction: row;
+  gap: 1rem;
 }

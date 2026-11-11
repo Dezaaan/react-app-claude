@@ -19,6 +19,7 @@ export const Modal: ModalComponent = ({
   open,
   children,
   className,
+  closeOnOverlayClick = true,
   container,
   onClose,
   ...props
@@ -28,7 +29,7 @@ export const Modal: ModalComponent = ({
   }
 
   const handleClose = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+    if (closeOnOverlayClick && event.target === event.currentTarget) {
       onClose();
     }
   };

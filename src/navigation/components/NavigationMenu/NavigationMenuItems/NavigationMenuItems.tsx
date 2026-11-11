@@ -1,16 +1,30 @@
 import styles from "./NavigationMenuItems.module.scss";
-import { List } from "@/shared/components/List";
+import { List, ListItem } from "@/shared/components/List";
 import { useNavigationItems } from "@/navigation/hooks/useNavigationItems";
-import { NavigationItem } from "@/navigation";
+import { NavigationItem } from "../../NavigationItem/NavigationItem";
 
-export const NavigationMenuItems = () => {
+type NavigationMenuItemsProps = {
+  id?: string;
+  onItemClick?: () => void;
+};
+
+export const NavigationMenuItems = ({
+  id,
+  onItemClick,
+}: NavigationMenuItemsProps) => {
   const menuItems = useNavigationItems("menu");
   return (
-    <List className={styles.menuItems}>
+    <List id={id} className={styles.menuItems}>
       {menuItems.map((item) => (
-        <NavigationItem className={styles.link} key={item.path} to={item.path}>
-          {item.meta.navigation?.label}
-        </NavigationItem>
+        <ListItem key={item.path}>
+          <NavigationItem
+            className={styles.link}
+            to={item.path}
+            onClick={onItemClick}
+          >
+            {item.meta.navigation?.label}
+          </NavigationItem>
+        </ListItem>
       ))}
     </List>
   );

@@ -11,11 +11,13 @@ export const NavigationItem = ({
   to,
   children,
   className,
+  onClick,
 }: NavigationItemProps) => {
   return (
     <NavLink
       to={to}
       end={to === "/"}
+      onClick={onClick}
       className={({ isActive }) =>
         cn(styles.list, className, isActive && styles.active)
       }
