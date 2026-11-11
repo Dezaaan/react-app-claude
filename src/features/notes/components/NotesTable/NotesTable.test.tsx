@@ -1,7 +1,14 @@
-import { render, screen, within } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
+import { PageLayout } from "@/layouts/PageLayout/PageLayout";
 import type { Note } from "../../types";
 import { NotesTable } from "./NotesTable";
 
@@ -49,5 +56,32 @@ describe("NotesTable", () => {
 
     expect(await screen.findByText("Showing 1 of 3 notes")).toBeInTheDocument();
     expect(screen.getByRole("table")).toHaveAttribute("aria-rowcount", "3");
+  });
+
+  it("shows the page loading bar until the filtered rows are ready", async () => {
+    const router = createMemoryRouter([
+      {
+        element: <PageLayout />,
+        children: [{ index: true, element: <NotesTable notes={notes} /> }],
+      },
+    ]);
+    render(<RouterProvider router={router} />);
+    const progress = () =>
+      screen.queryByRole("progressbar", { name: "Updating results" });
+    expect(progress()).not.toBeInTheDocument();
+
+    await userEvent.type(
+      screen.getByRole("searchbox", { name: "Filter by Title" }),
+      "Note 2",
+    );
+
+    expect(progress()).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("3 notes");
+
+    await waitForElementToBeRemoved(progress);
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Showing 1 of 3 notes",
+    );
   });
 });

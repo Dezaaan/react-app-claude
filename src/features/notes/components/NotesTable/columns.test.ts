@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { columns } from "../components/NotesTable/columns";
-import type { Note } from "../types";
-import { filterNotes } from "./filters";
+import { filterRows } from "@/shared/components/Table/filterRows";
+import type { Note } from "../../types";
+import { columns } from "./columns";
 
 const notes: Note[] = [
   {
@@ -20,12 +20,13 @@ const notes: Note[] = [
 ];
 
 const ids = (filters: Record<string, string>) =>
-  filterNotes(notes, filters, columns).map((note) => note.id);
+  filterRows(notes, filters, columns).map((note) => note.id);
 
-describe("filterNotes", () => {
+// The notes columns run through the shared table filter, as on the page.
+describe("filtering notes by column", () => {
   it("returns the same array when no filter is active", () => {
-    expect(filterNotes(notes, {}, columns)).toBe(notes);
-    expect(filterNotes(notes, { title: "   " }, columns)).toBe(notes);
+    expect(filterRows(notes, {}, columns)).toBe(notes);
+    expect(filterRows(notes, { title: "   " }, columns)).toBe(notes);
   });
 
   it("matches case-insensitively and ignores surrounding whitespace", () => {
