@@ -1,8 +1,8 @@
 import { redirect, type ActionFunctionArgs } from "react-router-dom";
 
 import { ROUTES } from "@/app/router/routes";
-import { authApi } from "../api/authApi";
-import { clearSession } from "../session";
+import { authApi } from "@/features/auth/api/authApi";
+import { clearSession } from "@/features/auth/session";
 
 /**
  * POST /logout. An action (not a link) because logging out changes state,

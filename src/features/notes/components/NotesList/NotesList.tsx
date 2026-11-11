@@ -1,5 +1,5 @@
 import styles from "./NotesList.module.scss";
-import type { Note } from "../../types";
+import type { Note } from "@/features/notes/types";
 import { memo, useCallback, useMemo } from "react";
 import { NoteRow } from "./NoteRow";
 import { List } from "react-window";

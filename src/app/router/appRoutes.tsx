@@ -4,14 +4,24 @@ import MainLayout from "@/layouts";
 import { AuthenticatedApp } from "@/app/router/AuthenticatedApp";
 import { authenticatedAppLoader } from "@/app/router/loaders/authenticatedAppLoader";
 
-import { AppErrorFallback } from "../errors/AppErrorFallback";
-import { RouteError } from "../errors/RouteError";
-import { isApplicationRoute, isStandaloneRoute } from "./types";
+import { AppErrorFallback } from "@/app/errors/AppErrorFallback";
+import { RouteError } from "@/app/errors/RouteError";
+import {
+  isApplicationRoute,
+  isStandaloneRoute,
+  type PageModule,
+} from "./types";
 import { routeConfig } from "./route-config";
 import { ROUTES } from "./routes";
 import { withAccess } from "@/features/auth/routes/requireAccess";
 import { logoutAction } from "@/features/auth/routes/logout";
 import { PageLayout } from "@/layouts/PageLayout/PageLayout";
+
+// Route `lazy` (unlike React.lazy) lets the router fetch the page's code
+// while its loader runs, instead of only after the data has arrived.
+const lazyPage = (page: () => Promise<PageModule>) => async () => ({
+  Component: (await page()).default,
+});
 
 const applicationRoutes = (
   <Route
@@ -24,7 +34,7 @@ const applicationRoutes = (
       <Route element={<PageLayout />}>
         {routeConfig
           .filter(isApplicationRoute)
-          .map(({ path, Component, loader, meta }) => {
+          .map(({ path, page, loader, meta }) => {
             return (
               <Route
                 key={path}
@@ -32,7 +42,7 @@ const applicationRoutes = (
                 // Runs the access check first, so the page's data is only
                 // fetched for users allowed to see it.
                 loader={withAccess(meta.access, loader)}
-                element={<Component />}
+                lazy={lazyPage(page)}
                 errorElement={<RouteError />}
               />
             );
@@ -44,13 +54,13 @@ const applicationRoutes = (
 
 const standaloneRoutes = routeConfig
   .filter(isStandaloneRoute)
-  .map(({ path, Component, loader, action }) => (
+  .map(({ path, page, loader, action }) => (
     <Route
       key={path}
       path={path}
       loader={loader}
       action={action}
-      element={<Component />}
+      lazy={lazyPage(page)}
     />
   ));
 

@@ -1,5 +1,5 @@
 import { List, ListItem } from "@/shared/components/List";
-import { NavigationItem } from "../NavigationItem/NavigationItem";
+import { NavigationItem } from "@/navigation/components/NavigationItem/NavigationItem";
 import { useNavigationItems } from "@/navigation/hooks/useNavigationItems";
 import styles from "./NavigationLinks.module.scss";
 

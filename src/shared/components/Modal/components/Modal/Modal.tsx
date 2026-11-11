@@ -9,13 +9,13 @@ import {
 } from "react";
 
 import { cn } from "@/shared/utils/cn";
-import { ModalContext } from "../../context";
-import { useBodyScrollLock } from "../../hooks/useBodyScrollLock";
-import { useFocusTrap } from "../../hooks/useFocusTrap";
-import type { ModalProps } from "../../types";
-import { ModalBody } from "../Body/Body";
-import { ModalFooter } from "../Footer/Footer";
-import { ModalHeader } from "../Header/Header";
+import { ModalContext } from "@/shared/components/Modal/context";
+import { useBodyScrollLock } from "@/shared/components/Modal/hooks/useBodyScrollLock";
+import { useFocusTrap } from "@/shared/components/Modal/hooks/useFocusTrap";
+import type { ModalProps } from "@/shared/components/Modal/types";
+import { ModalBody } from "@/shared/components/Modal/components/Body/Body";
+import { ModalFooter } from "@/shared/components/Modal/components/Footer/Footer";
+import { ModalHeader } from "@/shared/components/Modal/components/Header/Header";
 import styles from "./Modal.module.scss";
 
 type ModalComponent = {

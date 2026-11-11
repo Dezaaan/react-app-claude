@@ -1,7 +1,11 @@
-import { AppError } from "@/app/errors/AppError";
-import { ERROR_CODES } from "@/app/errors/errorCodes";
+import { AppError } from "@/shared/errors/AppError";
+import { ERROR_CODES } from "@/shared/errors/errorCodes";
 import { httpClient } from "@/shared/api/httpClient";
-import type { AuthUser, LoginCredentials, Permission } from "../types";
+import type {
+  AuthUser,
+  LoginCredentials,
+  Permission,
+} from "@/features/auth/types";
 
 type RequestConfig = { signal?: AbortSignal };
 

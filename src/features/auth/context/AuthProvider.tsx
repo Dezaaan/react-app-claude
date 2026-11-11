@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 
-import { canAccess } from "../access";
-import type { AuthContextValue, AuthProviderProps } from "../types";
+import { canAccess } from "@/features/auth/access";
+import type {
+  AuthContextValue,
+  AuthProviderProps,
+} from "@/features/auth/types";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({

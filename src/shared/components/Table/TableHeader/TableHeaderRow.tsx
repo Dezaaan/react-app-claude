@@ -1,4 +1,4 @@
-import type { TableHeaderRowProps } from "../types";
+import type { TableHeaderRowProps } from "@/shared/components/Table/types";
 import styles from "./TableHeader.module.scss";
 
 export const TableHeaderRow = <T,>({

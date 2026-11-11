@@ -1,5 +1,5 @@
-import { getGridTemplateColumns } from "../helpers";
-import type { TableHeaderProps } from "../types";
+import { getGridTemplateColumns } from "@/shared/components/Table/helpers";
+import type { TableHeaderProps } from "@/shared/components/Table/types";
 import { TableFilterRow } from "./TableFilterRow";
 import styles from "./TableHeader.module.scss";
 import { TableHeaderRow } from "./TableHeaderRow";

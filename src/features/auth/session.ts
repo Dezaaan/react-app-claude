@@ -1,4 +1,4 @@
-import { authApi } from "./api/authApi";
+import { authApi } from "@/features/auth/api/authApi";
 import type { AuthState } from "./types";
 
 /**

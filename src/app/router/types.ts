@@ -1,6 +1,6 @@
 import type { AccessRequirement } from "@/features/auth/types";
 import type { ComponentType } from "react";
-import type { LoaderFunction, RouteObject } from "react-router-dom";
+import type { ActionFunction, LoaderFunction } from "react-router-dom";
 
 export type RoutePlacement = "nav" | "menu";
 
@@ -29,13 +29,18 @@ export type StandaloneRouteMeta = {
   title: string;
 };
 
-// Every config route must define a path and a component (RouteObject makes
-// both optional). `loader` is narrowed to a function: RouteObject also allows
-// `true`, which is for server rendering and not used here.
-type ConfigRouteObject = RouteObject & {
+/** A page file: its default export is the page component. */
+export type PageModule = { default: ComponentType };
+
+type ConfigRouteObject = {
   path: string;
-  Component: ComponentType;
+  /**
+   * Imports the page's code. The router starts it together with the
+   * loader, so the code and the data download in parallel.
+   */
+  page: () => Promise<PageModule>;
   loader?: LoaderFunction;
+  action?: ActionFunction;
 };
 
 export type ApplicationRoute = ConfigRouteObject & {

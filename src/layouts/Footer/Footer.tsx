@@ -1,5 +1,5 @@
 import styles from "./Footer.module.scss";
-import { FooterColumn } from "./FooterColumn/FooterColumn";
+import { FooterColumn } from "@/layouts/Footer/FooterColumn/FooterColumn";
 import { List } from "@/shared/components/List";
 import { footerConfig } from "./footer-config";
 

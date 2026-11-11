@@ -1,5 +1,5 @@
-import { getColumnLabel } from "../helpers";
-import type { TableFilterRowProps } from "../types";
+import { getColumnLabel } from "@/shared/components/Table/helpers";
+import type { TableFilterRowProps } from "@/shared/components/Table/types";
 import styles from "./TableHeader.module.scss";
 
 export const TableFilterRow = <T,>({

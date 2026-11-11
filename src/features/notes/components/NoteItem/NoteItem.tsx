@@ -1,6 +1,6 @@
 import { type MouseEventHandler } from "react";
 import styles from "./NoteItem.module.scss";
-import type { Note } from "../../types";
+import type { Note } from "@/features/notes/types";
 
 interface NoteItemProps {
   note: Note;

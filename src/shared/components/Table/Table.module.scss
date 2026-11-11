@@ -1,42 +1,43 @@
-// On narrow screens the table scrolls sideways instead of squashing columns.
+// On narrow screens the table scrolls sideways (see the minWidth prop)
+// instead of squashing columns.
 .scroll {
   width: 100%;
   overflow-x: auto;
 }
 
 .table {
+  // Border included in the width, so the table never overflows its parent.
+  box-sizing: border-box;
   width: 100%;
-  min-width: max-content;
-  border-collapse: collapse;
-  border: 1px solid #ccc;
-}
 
-.table th,
-.table td {
-  border: 1px solid #ccc;
-  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+
+  text-align: left;
+  font-size: 14px;
 }
 
 .cell {
   min-width: 0;
-  height: 100%;
 
   display: flex;
   align-items: center;
-  justify-content: center;
 
-  padding: 0px 12px;
+  padding: 0 12px;
 
-  border-right: 1px solid #ddd;
+  border-right: 1px solid var(--border);
 
-  font-size: 14px;
-  font-weight: 600;
+  &:last-child {
+    border-right: none;
+  }
+}
+
+// Ellipsis only works on a block, not directly on a flex container.
+.text {
+  min-width: 0;
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.cell:last-child {
-  border-right: none;
 }

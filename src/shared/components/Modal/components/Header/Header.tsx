@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/shared/utils/cn";
-import { useModalContext } from "../../context";
+import { useModalContext } from "@/shared/components/Modal/context";
 import styles from "./Header.module.scss";
 
 type ModalHeaderProps = ComponentPropsWithoutRef<"header">;

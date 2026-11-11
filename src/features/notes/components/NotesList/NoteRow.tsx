@@ -1,7 +1,7 @@
 import type { MouseEventHandler } from "react";
 import { type RowComponentProps } from "react-window";
-import type { Note } from "../../types";
-import { NoteItem } from "../NoteItem/NoteItem";
+import type { Note } from "@/features/notes/types";
+import { NoteItem } from "@/features/notes/components/NoteItem/NoteItem";
 
 type NoteRowData = {
   notes: Note[];

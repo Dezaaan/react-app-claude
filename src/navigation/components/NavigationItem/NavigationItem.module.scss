@@ -1,29 +1,16 @@
-.item {
-  list-style: none;
-}
-
-.link,
-.button {
-  width: 100%;
-
-  display: block;
-
-  padding: 0.75rem 1rem;
-
-  border: none;
-  background: transparent;
-
-  text-align: left;
+.link {
+  color: var(--text-h);
   text-decoration: none;
 
-  cursor: pointer;
+  transition: color 0.2s ease;
 
-  color: #333;
-
-  transition: background-color 0.2s ease;
+  &:hover {
+    color: var(--accent);
+  }
 }
 
-.link:hover,
-.button:hover {
-  background-color: #6b6375;
+// The link of the page you're on.
+.active {
+  color: var(--accent);
+  font-weight: 600;
 }

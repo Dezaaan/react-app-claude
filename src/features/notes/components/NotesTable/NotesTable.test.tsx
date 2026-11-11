@@ -6,10 +6,10 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { PageLayout } from "@/layouts/PageLayout/PageLayout";
-import type { Note } from "../../types";
+import type { Note } from "@/features/notes/types";
 import { NotesTable } from "./NotesTable";
 
 const notes: Note[] = Array.from({ length: 3 }, (_, index) => ({
@@ -83,5 +83,52 @@ describe("NotesTable", () => {
     expect(screen.getByRole("status")).toHaveTextContent(
       "Showing 1 of 3 notes",
     );
+  });
+
+  it("says so when no note matches", async () => {
+    render(<NotesTable notes={notes} />);
+
+    await userEvent.type(
+      screen.getByRole("searchbox", { name: "Filter by Title" }),
+      "nothing like this",
+    );
+
+    expect(
+      await screen.findByRole("cell", { name: "No results" }),
+    ).toBeInTheDocument();
+  });
+
+  describe("header alignment", () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    const scrollbarWidth = () =>
+      screen
+        .getByRole("table")
+        .style.getPropertyValue("--table-scrollbar-width");
+
+    it("leaves room above the body's scrollbar, and none without one", async () => {
+      // jsdom has no layout: pretend the rows overflow and a 15px
+      // scrollbar takes space inside the body.
+      vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(
+        1000,
+      );
+      vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(
+        985,
+      );
+      render(<NotesTable notes={notes} />);
+
+      expect(scrollbarWidth()).toBe("15px");
+
+      // With no rows there is no scrolling list, so no scrollbar.
+      await userEvent.type(
+        screen.getByRole("searchbox", { name: "Filter by Title" }),
+        "nothing like this",
+      );
+      await screen.findByRole("cell", { name: "No results" });
+
+      expect(scrollbarWidth()).toBe("0px");
+    });
   });
 });

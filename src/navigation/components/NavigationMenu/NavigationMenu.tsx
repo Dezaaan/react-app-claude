@@ -1,5 +1,5 @@
 import styles from "./NavigationMenu.module.scss";
-import { NavigationMenuItems } from "./NavigationMenuItems/NavigationMenuItems";
+import { NavigationMenuItems } from "@/navigation/components/NavigationMenu/NavigationMenuItems/NavigationMenuItems";
 import { cn } from "@/shared/utils/cn";
 import {
   useCallback,
