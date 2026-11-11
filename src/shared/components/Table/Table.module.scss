@@ -1,5 +1,12 @@
+// On narrow screens the table scrolls sideways instead of squashing columns.
+.scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
+  min-width: max-content;
   border-collapse: collapse;
   border: 1px solid #ccc;
 }

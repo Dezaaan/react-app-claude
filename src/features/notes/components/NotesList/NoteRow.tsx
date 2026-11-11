@@ -9,6 +9,7 @@ type NoteRowData = {
 };
 
 export const NoteRow = ({
+  ariaAttributes,
   index,
   style,
   notes,
@@ -16,7 +17,7 @@ export const NoteRow = ({
 }: RowComponentProps<NoteRowData>) => {
   const note = notes[index];
   return (
-    <div style={style}>
+    <div {...ariaAttributes} style={style}>
       <NoteItem note={note} handleNoteClick={handleNoteClick} />
     </div>
   );

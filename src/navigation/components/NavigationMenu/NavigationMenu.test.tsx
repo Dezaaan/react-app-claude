@@ -50,4 +50,16 @@ describe("NavigationMenu", () => {
 
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });
+
+  it("closes on Escape and puts focus back on the menu button", async () => {
+    renderMenu();
+    await userEvent.click(trigger());
+    await userEvent.tab();
+    expect(screen.getByRole("link", { name: "Profile" })).toHaveFocus();
+
+    await userEvent.keyboard("{Escape}");
+
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
+    expect(trigger()).toHaveFocus();
+  });
 });

@@ -12,7 +12,7 @@ export const TableHeader = <T,>({
   const gridTemplateColumns = getGridTemplateColumns(columns);
 
   return (
-    <div className={styles.header}>
+    <div role="rowgroup" className={styles.header}>
       <TableHeaderRow
         columns={columns}
         gridTemplateColumns={gridTemplateColumns}

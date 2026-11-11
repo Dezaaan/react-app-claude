@@ -41,15 +41,14 @@ export const NotesList = memo(({ notes, onClickNoteItem }: NotesListProps) => {
 
   return (
     <List
+      aria-label="Notes"
       className={styles.list}
       rowCount={notes.length}
       rowHeight={100}
       rowProps={rowProps}
       rowComponent={NoteRow}
-      style={{
-        width: "100%",
-        height: "700px",
-      }}
+      // The height comes from CSS; this is used until the list measures itself.
+      defaultHeight={700}
     />
   );
 });

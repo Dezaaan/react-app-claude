@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 import { Modal } from "../Modal";
 import styles from "./ConfirmationModal.module.scss";
 
@@ -20,11 +22,23 @@ export const ConfirmationModal = ({
   cancelLabel = "Cancel",
   confirmLabel = "Confirm",
 }: ConfirmationModalProps) => {
+  const bodyId = useId();
+
+  // "alertdialog" tells screen readers this needs an answer, and reads the
+  // question (the body) together with the title.
   return (
-    <Modal open={isOpen} onClose={onCancel} className={styles.container}>
+    <Modal
+      open={isOpen}
+      onClose={onCancel}
+      className={styles.container}
+      role="alertdialog"
+      aria-describedby={bodyId}
+    >
       <Modal.Header>{title}</Modal.Header>
 
-      <Modal.Body className={styles.body}>{body}</Modal.Body>
+      <Modal.Body id={bodyId} className={styles.body}>
+        {body}
+      </Modal.Body>
 
       <Modal.Footer>
         <button type="button" onClick={onCancel} className={styles.cancel}>
