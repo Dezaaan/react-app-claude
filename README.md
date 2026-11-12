@@ -14,7 +14,8 @@ npm ci
 npm run dev
 ```
 
-The app runs at http://localhost:5173. In development the API is mocked
+The app runs at http://localhost:5173 (the port is fixed: the backend only
+accepts that origin). In development the API is mocked
 (see [Mock API](#mock-api)), so no backend is needed. Log in with any email
 and the password `password`.
 
@@ -35,10 +36,23 @@ CI (GitHub Actions) runs lint, tests and build on every pull request.
 
 Copy `.env.example` to `.env.local` to change these:
 
-| Variable         | Default | Meaning                                                              |
-| ---------------- | ------- | -------------------------------------------------------------------- |
-| `VITE_API_URL`   | `/api`  | Base URL of the API. Use a full URL for a backend on another origin. |
-| `VITE_API_MOCKS` | `true`  | Development only. `false` sends requests to the real API instead.    |
+| Variable                | Default                 | Meaning                                                              |
+| ----------------------- | ----------------------- | -------------------------------------------------------------------- |
+| `VITE_API_URL`          | `/api/v1`               | Base URL of the API. Use a full URL for a backend on another origin. |
+| `VITE_API_PROXY_TARGET` | `http://localhost:3000` | Development only. Where the dev server forwards `/api` requests.     |
+| `VITE_API_MOCKS`        | `true`                  | Development only. `false` sends requests to the real API instead.    |
+
+## Running against the backend
+
+1. Start the backend (`nodejs-app-claude`) with `CLIENT_ORIGIN=http://localhost:5173`.
+2. Create `.env.local` with `VITE_API_MOCKS=false` (and `VITE_API_PROXY_TARGET`
+   if the backend isn't on port 3000).
+3. `npm run dev` and open **http://localhost:5173**. Use `localhost`, not
+   `127.0.0.1`: they are different sites, and the login cookie isn't shared.
+
+The dev server forwards `/api` to the backend, so the browser sees a single
+origin. In production, serve the frontend and API from the same parent
+domain (see the backend README).
 
 ## Mock API
 

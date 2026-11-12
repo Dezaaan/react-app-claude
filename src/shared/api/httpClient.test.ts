@@ -40,7 +40,7 @@ describe("httpClient success responses", () => {
       query: { page: 2, search: "milk", tag: undefined, owner: null },
     });
 
-    expect(receivedUrl?.pathname).toBe("/api/things");
+    expect(receivedUrl?.pathname).toBe("/api/v1/things");
     expect(receivedUrl?.search).toBe("?page=2&search=milk");
   });
 
