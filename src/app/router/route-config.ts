@@ -111,19 +111,6 @@ const standaloneRoutes = [
     },
   },
   {
-    path: ROUTES.FORBIDDEN,
-    page: () => import("@/pages/Forbidden/ForbiddenPage"),
-    meta: {
-      title: "Forbidden",
-      layout: "standalone",
-      navigation: {
-        label: "Forbidden",
-        order: 6,
-        visible: false,
-      },
-    },
-  },
-  {
     path: ROUTES.NOTFOUND,
     page: () => import("@/pages/NotFound/NotFoundPage"),
     meta: {

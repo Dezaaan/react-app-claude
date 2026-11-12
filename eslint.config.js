@@ -13,7 +13,7 @@ const parentImports = {
 }
 
 export default defineConfig([
-  globalIgnores(['dist', 'public/mockServiceWorker.js']),
+  globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

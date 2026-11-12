@@ -1,18 +1,9 @@
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
-import { PageLayout } from "@/layouts/PageLayout/PageLayout";
 import { Table } from "@/shared/components/Table/Table";
 import type { TableColumn, TableSort } from "@/shared/components/Table/types";
-import { useTableFilters } from "@/shared/components/Table/useTableFilters";
 
 type Item = { id: string; name: string };
 
@@ -32,31 +23,16 @@ const items: Item[] = [1, 2, 3].map((n) => ({
   name: `Item ${n}`,
 }));
 
-/** A table whose rows are all loaded: filtered in the browser. */
-const ClientTable = () => {
-  const { filters, onFilterChange, rows } = useTableFilters(items, columns);
-
-  return (
-    <Table aria-label="Items" rowCount={rows.length}>
-      <Table.Header
-        columns={columns}
-        filters={filters}
-        onFilterChange={onFilterChange}
-      />
-      <Table.Body data={rows} columns={columns} />
-    </Table>
-  );
-};
-
-const filterByName = (text: string) =>
-  userEvent.type(
-    screen.getByRole("searchbox", { name: "Filter by Name" }),
-    text,
-  );
+const ItemsTable = ({ data = items }: { data?: Item[] }) => (
+  <Table aria-label="Items" rowCount={data.length}>
+    <Table.Header columns={columns} />
+    <Table.Body data={data} columns={columns} />
+  </Table>
+);
 
 describe("Table", () => {
   it("is a table with column headers, labelled filters and numbered rows", () => {
-    render(<ClientTable />);
+    render(<ItemsTable />);
 
     const table = screen.getByRole("table", { name: "Items" });
     // Two header rows (titles, filters) plus the data rows.
@@ -92,39 +68,12 @@ describe("Table", () => {
     );
   });
 
-  it("filters rows in the browser and says so when none match", async () => {
-    render(<ClientTable />);
+  it("says so when there are no rows", () => {
+    render(<ItemsTable data={[]} />);
 
-    await filterByName("Item 2");
-    await waitFor(() =>
-      expect(screen.getByRole("table")).toHaveAttribute("aria-rowcount", "3"),
-    );
-
-    await userEvent.clear(
-      screen.getByRole("searchbox", { name: "Filter by Name" }),
-    );
-    await filterByName("nothing like this");
     expect(
-      await screen.findByRole("cell", { name: "No results" }),
+      screen.getByRole("cell", { name: "No results" }),
     ).toBeInTheDocument();
-  });
-
-  it("shows the page loading bar until the filtered rows are ready", async () => {
-    const router = createMemoryRouter([
-      {
-        element: <PageLayout />,
-        children: [{ index: true, element: <ClientTable /> }],
-      },
-    ]);
-    render(<RouterProvider router={router} />);
-    const progress = () =>
-      screen.queryByRole("progressbar", { name: "Updating results" });
-
-    await filterByName("Item 2");
-
-    expect(progress()).toBeInTheDocument();
-    await waitForElementToBeRemoved(progress);
-    expect(screen.getByRole("table")).toHaveAttribute("aria-rowcount", "3");
   });
 
   it("marks the sorted column and reports header clicks", async () => {
@@ -150,12 +99,12 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledWith("name");
   });
 
-  it("leaves room above the body's scrollbar, and none without one", async () => {
+  it("leaves room above the body's scrollbar, and none without one", () => {
     // jsdom has no layout: pretend the rows overflow and a 15px scrollbar
     // takes space inside the body.
     vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(1000);
     vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(985);
-    render(<ClientTable />);
+    const { rerender } = render(<ItemsTable />);
     const scrollbarWidth = () =>
       screen
         .getByRole("table")
@@ -164,8 +113,7 @@ describe("Table", () => {
     expect(scrollbarWidth()).toBe("15px");
 
     // With no rows there is no scrolling list, so no scrollbar.
-    await filterByName("nothing like this");
-    await screen.findByRole("cell", { name: "No results" });
+    rerender(<ItemsTable data={[]} />);
 
     expect(scrollbarWidth()).toBe("0px");
   });

@@ -5,8 +5,6 @@ interface ImportMetaEnv {
   readonly VITE_API_URL?: string;
   /** Dev server only: backend that /api is forwarded to. */
   readonly VITE_API_PROXY_TARGET?: string;
-  /** Set to "false" to disable mock API responses in development. */
-  readonly VITE_API_MOCKS?: string;
 }
 
 interface ImportMeta {
