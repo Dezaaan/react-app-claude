@@ -1,5 +1,5 @@
 import { Modal } from "@/shared/components/Modal";
-import type { Note } from "../../types";
+import type { Note } from "@/features/notes/types";
 import styles from "./NoteDetailsModal.module.scss";
 
 type NoteDetailsModalProps = {

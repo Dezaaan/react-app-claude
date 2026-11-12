@@ -1,47 +1,58 @@
 .header {
-  width: 100%;
+  // Same width as the body's scrollbar, so the columns line up.
+  padding-right: var(--table-scrollbar-width, 0px);
+
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--border);
 }
 
 .headerRow,
 .filterRow {
   display: grid;
-  width: 100%;
 }
 
 .headerRow {
-  min-height: 50px;
-  align-items: center;
+  min-height: 44px;
+
   font-weight: 600;
+  color: var(--text-h);
 }
 
 .filterRow {
-  min-height: 50px;
-  align-items: center;
-
-  border-bottom: 2px solid #ccc;
+  min-height: 48px;
 }
 
 .cell {
   min-width: 0;
-  height: 100%;
 
   display: flex;
   align-items: center;
 
-  padding: 8px 12px;
+  padding: 6px 12px;
 
-  border-right: 1px solid #ddd;
-}
+  border-right: 1px solid var(--border);
 
-.cell:last-child {
-  border-right: none;
-}
+  &:last-child {
+    border-right: none;
+  }
 
-.cell input {
-  width: 100%;
-  box-sizing: border-box;
+  input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 
-  padding: 6px 8px;
+    padding: 6px 8px;
 
-  font-size: 13px;
+    font: inherit;
+    color: var(--text-h);
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 4px;
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { AppError } from "@/app/errors/AppError";
-import { ERROR_CODES } from "@/app/errors/errorCodes";
+import { AppError } from "@/shared/errors/AppError";
+import { ERROR_CODES } from "@/shared/errors/errorCodes";
 import { mockUser } from "@/mocks/data";
 import { scenarios } from "@/mocks/handlers";
 import { server } from "@/mocks/server";

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "@/features/auth/context/AuthContext";
 
 /** The logged-in user and their permissions. Only usable inside AuthProvider. */
 export const useAuth = () => {

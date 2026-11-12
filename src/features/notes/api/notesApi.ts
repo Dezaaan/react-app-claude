@@ -1,5 +1,5 @@
 import { httpClient } from "@/shared/api/httpClient";
-import type { Note } from "../types";
+import type { Note } from "@/features/notes/types";
 
 type RequestConfig = { signal?: AbortSignal };
 

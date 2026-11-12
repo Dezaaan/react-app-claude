@@ -1,9 +1,9 @@
-import { AppError } from "@/app/errors/AppError";
+import { AppError } from "@/shared/errors/AppError";
 import {
   DEFAULT_USER_MESSAGES,
   ERROR_CODES,
   errorCodeFromStatus,
-} from "@/app/errors/errorCodes";
+} from "@/shared/errors/errorCodes";
 
 /**
  * The single place where the app talks HTTP.

@@ -5,8 +5,8 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import { REDIRECT_PARAM } from "../../redirects";
-import type { LoginActionData } from "../../routes/login";
+import { REDIRECT_PARAM } from "@/features/auth/redirects";
+import type { LoginActionData } from "@/features/auth/routes/login";
 import styles from "./LoginForm.module.scss";
 
 /**

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { ConfirmationModal } from ".";
+import { ConfirmationModal } from "@/shared/components/ConfirmationModal";
 
 describe("ConfirmationModal", () => {
   it("is an alert dialog that reads out its title and question", () => {

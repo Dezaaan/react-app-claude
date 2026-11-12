@@ -1,2 +1,2 @@
-export { List } from "./List/List";
-export { ListItem } from "./ListItem/ListItem";
+export { List } from "@/shared/components/List/List/List";
+export { ListItem } from "@/shared/components/List/ListItem/ListItem";

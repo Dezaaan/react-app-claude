@@ -5,8 +5,8 @@ import { ROUTES } from "@/app/router/routes";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useNavigationItems } from "@/navigation/hooks/useNavigationItems";
 import { List } from "@/shared/components/List";
-import { NavigationMenuItem } from "../NavigationMenuItem/NavigationMenuItem";
-import type { NavigationMenuItemConfig } from "../types";
+import { NavigationMenuItem } from "@/navigation/components/NavigationMenu/NavigationMenuItem/NavigationMenuItem";
+import type { NavigationMenuItemConfig } from "@/navigation/components/NavigationMenu/types";
 
 type NavigationMenuItemsProps = {
   id?: string;

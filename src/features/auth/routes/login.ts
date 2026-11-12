@@ -4,11 +4,11 @@ import {
   type LoaderFunctionArgs,
 } from "react-router-dom";
 
-import { ERROR_CODES } from "@/app/errors/errorCodes";
-import { normalizeError } from "@/app/errors/normalizeError";
-import { authApi } from "../api/authApi";
-import { REDIRECT_PARAM, safeRedirect } from "../redirects";
-import { clearSession, getSession } from "../session";
+import { ERROR_CODES } from "@/shared/errors/errorCodes";
+import { normalizeError } from "@/shared/errors/normalizeError";
+import { authApi } from "@/features/auth/api/authApi";
+import { REDIRECT_PARAM, safeRedirect } from "@/features/auth/redirects";
+import { clearSession, getSession } from "@/features/auth/session";
 
 export type LoginActionData = { error: string };
 

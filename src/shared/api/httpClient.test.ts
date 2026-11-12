@@ -1,8 +1,8 @@
 import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
 
-import { AppError } from "@/app/errors/AppError";
-import { ERROR_CODES } from "@/app/errors/errorCodes";
+import { AppError } from "@/shared/errors/AppError";
+import { ERROR_CODES } from "@/shared/errors/errorCodes";
 import { server } from "@/mocks/server";
 import { apiUrl, httpClient } from "./httpClient";
 

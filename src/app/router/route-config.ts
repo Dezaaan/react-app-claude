@@ -1,23 +1,12 @@
 import type { RouteConfig } from "./types";
 import { ROUTES } from "./routes";
-import { lazy } from "react";
 import { notesLoader } from "@/features/notes/loaders/notesLoader";
 import { loginAction, loginLoader } from "@/features/auth/routes/login";
-
-const AboutPage = lazy(() => import("../../pages/About/AboutPage"));
-const ContactPage = lazy(() => import("../../pages/Contact/ContactPage"));
-const ForbiddenPage = lazy(() => import("../../pages/Forbidden/ForbiddenPage"));
-const HomePage = lazy(() => import("../../pages/Home/HomePage"));
-const LoginPage = lazy(() => import("../../pages/Login/LoginPage"));
-const NotFoundPage = lazy(() => import("../../pages/NotFound/NotFoundPage"));
-const NotesPage = lazy(() => import("../../pages/Notes/NotesPage"));
-const ProfilePage = lazy(() => import("../../pages/Profile/ProfilePage"));
-const SettingsPage = lazy(() => import("../../pages/Settings/SettingsPage"));
 
 const applicationRoutes = [
   {
     path: ROUTES.HOME,
-    Component: HomePage,
+    page: () => import("@/pages/Home/HomePage"),
     loader: notesLoader,
     meta: {
       layout: "application",
@@ -32,7 +21,7 @@ const applicationRoutes = [
   },
   {
     path: ROUTES.NOTES,
-    Component: NotesPage,
+    page: () => import("@/pages/Notes/NotesPage"),
     loader: notesLoader,
     meta: {
       access: { type: "permission", permission: "notes.view" },
@@ -48,7 +37,7 @@ const applicationRoutes = [
   },
   {
     path: ROUTES.ABOUT,
-    Component: AboutPage,
+    page: () => import("@/pages/About/AboutPage"),
     meta: {
       layout: "application",
       title: "About",
@@ -62,7 +51,7 @@ const applicationRoutes = [
   },
   {
     path: ROUTES.CONTACT,
-    Component: ContactPage,
+    page: () => import("@/pages/Contact/ContactPage"),
     meta: {
       layout: "application",
       title: "Contact",
@@ -76,7 +65,7 @@ const applicationRoutes = [
   },
   {
     path: ROUTES.PROFILE,
-    Component: ProfilePage,
+    page: () => import("@/pages/Profile/ProfilePage"),
     meta: {
       layout: "application",
       title: "Profile",
@@ -90,7 +79,7 @@ const applicationRoutes = [
   },
   {
     path: ROUTES.SETTINGS,
-    Component: SettingsPage,
+    page: () => import("@/pages/Settings/SettingsPage"),
     meta: {
       layout: "application",
       title: "Settings",
@@ -107,7 +96,7 @@ const applicationRoutes = [
 const standaloneRoutes = [
   {
     path: ROUTES.LOGIN,
-    Component: LoginPage,
+    page: () => import("@/pages/Login/LoginPage"),
     loader: loginLoader,
     action: loginAction,
     meta: {
@@ -122,7 +111,7 @@ const standaloneRoutes = [
   },
   {
     path: ROUTES.FORBIDDEN,
-    Component: ForbiddenPage,
+    page: () => import("@/pages/Forbidden/ForbiddenPage"),
     meta: {
       title: "Forbidden",
       layout: "standalone",
@@ -135,7 +124,7 @@ const standaloneRoutes = [
   },
   {
     path: ROUTES.NOTFOUND,
-    Component: NotFoundPage,
+    page: () => import("@/pages/NotFound/NotFoundPage"),
     meta: {
       title: "Not Found",
       layout: "standalone",

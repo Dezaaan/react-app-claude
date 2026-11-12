@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { filterRows } from "@/shared/components/Table/filterRows";
-import type { Note } from "../../types";
+import type { Note } from "@/features/notes/types";
 import { columns } from "./columns";
 
 const notes: Note[] = [

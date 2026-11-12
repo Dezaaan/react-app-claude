@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import type { Note } from "../../types";
+import type { Note } from "@/features/notes/types";
 import { NotesList } from "./NotesList";
 
 const notes: Note[] = Array.from({ length: 3 }, (_, index) => ({

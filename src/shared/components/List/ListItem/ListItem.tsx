@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import styles from "./ListItem.module.scss";
-import type { ListItemProps } from "../types";
+import type { ListItemProps } from "@/shared/components/List/types";
 import { forwardRef } from "react";
 
 export const ListItem = forwardRef<HTMLLIElement, ListItemProps>(

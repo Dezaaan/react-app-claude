@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import styles from "./List.module.scss";
-import type { ListProps } from "../types";
+import type { ListProps } from "@/shared/components/List/types";
 
 export const List = ({
   children,

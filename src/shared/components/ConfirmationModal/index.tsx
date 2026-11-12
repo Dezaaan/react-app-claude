@@ -1,6 +1,6 @@
 import { useId } from "react";
 
-import { Modal } from "../Modal";
+import { Modal } from "@/shared/components/Modal";
 import styles from "./ConfirmationModal.module.scss";
 
 type ConfirmationModalProps = {

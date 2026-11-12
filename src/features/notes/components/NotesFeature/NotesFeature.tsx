@@ -1,6 +1,6 @@
-import type { Note, NotesFeatureProps } from "../../types";
-import { NoteDetailsModal } from "../NoteDetailsModal/NoteDetailsModal";
-import { NotesList } from "../NotesList/NotesList";
+import type { Note, NotesFeatureProps } from "@/features/notes/types";
+import { NoteDetailsModal } from "@/features/notes/components/NoteDetailsModal/NoteDetailsModal";
+import { NotesList } from "@/features/notes/components/NotesList/NotesList";
 import { useCallback, useState } from "react";
 
 export const NotesFeature = ({ notes }: NotesFeatureProps) => {

@@ -11,7 +11,7 @@ import { AuthProvider } from "@/features/auth/context/AuthProvider";
 import type { AuthState } from "@/features/auth/types";
 import { mockPermissions, mockUser } from "@/mocks/data";
 
-/** Lazy pages are imported on first render, which can take a moment. */
+/** Pages are imported (route `lazy`) on first visit, which can take a moment. */
 export const LOAD_TIMEOUT = { timeout: 5000 };
 
 /** Loader arguments as React Router would pass them for `path`. */

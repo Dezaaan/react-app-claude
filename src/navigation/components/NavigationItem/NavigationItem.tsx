@@ -1,5 +1,3 @@
-// navigation/NavigationItem.tsx
-
 import { NavLink } from "react-router-dom";
 
 import styles from "./NavigationItem.module.scss";
@@ -11,6 +9,7 @@ export const NavigationItem = ({
   to,
   children,
   className,
+  activeClassName = styles.active,
   onClick,
 }: NavigationItemProps) => {
   return (
@@ -19,7 +18,7 @@ export const NavigationItem = ({
       end={to === "/"}
       onClick={onClick}
       className={({ isActive }) =>
-        cn(styles.list, className, isActive && styles.active)
+        cn(styles.link, className, isActive && activeClassName)
       }
     >
       {children}

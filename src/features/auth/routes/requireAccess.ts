@@ -1,10 +1,10 @@
 import type { LoaderFunction, LoaderFunctionArgs } from "react-router-dom";
 
-import { AppError } from "@/app/errors/AppError";
-import { DEFAULT_USER_MESSAGES, ERROR_CODES } from "@/app/errors/errorCodes";
-import { canAccess } from "../access";
-import { getSession } from "../session";
-import type { AccessRequirement } from "../types";
+import { AppError } from "@/shared/errors/AppError";
+import { DEFAULT_USER_MESSAGES, ERROR_CODES } from "@/shared/errors/errorCodes";
+import { canAccess } from "@/features/auth/access";
+import { getSession } from "@/features/auth/session";
+import type { AccessRequirement } from "@/features/auth/types";
 
 /**
  * Wraps a route's loader so it only runs when the user meets `access`.

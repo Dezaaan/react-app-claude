@@ -1,6 +1,6 @@
 import styles from "./FooterColumn.module.scss";
 
-import type { FooterColumn as FooterColumnType } from "../types";
+import type { FooterColumn as FooterColumnType } from "@/layouts/Footer/types";
 import { List, ListItem } from "@/shared/components/List";
 
 type FooterColumnProps = {
