@@ -5,8 +5,16 @@ import { apiUrl } from "@/shared/api/httpClient";
 import { getMockNotes, MOCK_PASSWORD, mockUser } from "./data";
 import { mockSession } from "./session";
 
+/** The backend's error body: { error: { code, message, details? } }. */
+const apiError = (
+  status: number,
+  code: string,
+  message: string,
+  details?: unknown,
+) => HttpResponse.json({ error: { code, message, details } }, { status });
+
 const unauthorized = () =>
-  HttpResponse.json({ message: "Not authenticated" }, { status: 401 });
+  apiError(401, "UNAUTHORIZED", "Authentication required");
 
 /** Login and refresh: the user and a new access token. */
 const authResponse = (email = mockUser.email) =>
@@ -38,23 +46,19 @@ export const handlers = [
     const { email, password } = (await request.json()) as LoginCredentials;
 
     if (!email || !password) {
-      return HttpResponse.json(
-        {
-          message: "Email and password are required.",
-          errors: {
-            ...(!email && { email: ["Email is required."] }),
-            ...(!password && { password: ["Password is required."] }),
-          },
+      return apiError(400, "VALIDATION_ERROR", "Invalid request data", {
+        formErrors: [],
+        fieldErrors: {
+          ...(!email && { email: ["Invalid email address"] }),
+          ...(!password && {
+            password: ["Too small: expected string to have >=1 characters"],
+          }),
         },
-        { status: 422 },
-      );
+      });
     }
 
     if (password !== MOCK_PASSWORD) {
-      return HttpResponse.json(
-        { message: "Invalid credentials" },
-        { status: 401 },
-      );
+      return apiError(401, "UNAUTHORIZED", "Invalid email or password");
     }
 
     mockSession.logIn();
@@ -113,16 +117,13 @@ export const scenarios = {
 
   "notes-server-error": [
     http.get(apiUrl("/notes"), () =>
-      HttpResponse.json(
-        { message: "Database connection lost" },
-        { status: 500 },
-      ),
+      apiError(500, "INTERNAL_SERVER_ERROR", "An unexpected error occurred"),
     ),
   ],
 
   "notes-forbidden": [
     http.get(apiUrl("/notes"), () =>
-      HttpResponse.json({ message: "Missing notes.view" }, { status: 403 }),
+      apiError(403, "FORBIDDEN", "Missing notes.view"),
     ),
   ],
 

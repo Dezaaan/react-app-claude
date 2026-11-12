@@ -3,6 +3,7 @@ export const ERROR_CODES = {
   FORBIDDEN: "FORBIDDEN",
   NOT_FOUND: "NOT_FOUND",
   VALIDATION_ERROR: "VALIDATION_ERROR",
+  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS",
   NETWORK_ERROR: "NETWORK_ERROR",
   SERVER_ERROR: "SERVER_ERROR",
   UNKNOWN_ERROR: "UNKNOWN_ERROR",
@@ -16,6 +17,7 @@ export const DEFAULT_USER_MESSAGES: Record<ErrorCode, string> = {
   FORBIDDEN: "You don't have permission to access this page.",
   NOT_FOUND: "Page not found.",
   VALIDATION_ERROR: "Some of the submitted data is invalid.",
+  TOO_MANY_REQUESTS: "Too many attempts. Please wait a minute and try again.",
   NETWORK_ERROR: "Unable to connect to the server.",
   SERVER_ERROR: "The server ran into a problem. Please try again later.",
   UNKNOWN_ERROR: "Something unexpected happened.",
@@ -27,6 +29,7 @@ export const errorCodeFromStatus = (status: number): ErrorCode => {
   if (status === 403) return ERROR_CODES.FORBIDDEN;
   if (status === 404) return ERROR_CODES.NOT_FOUND;
   if (status === 400 || status === 422) return ERROR_CODES.VALIDATION_ERROR;
+  if (status === 429) return ERROR_CODES.TOO_MANY_REQUESTS;
   if (status >= 500) return ERROR_CODES.SERVER_ERROR;
   return ERROR_CODES.UNKNOWN_ERROR;
 };

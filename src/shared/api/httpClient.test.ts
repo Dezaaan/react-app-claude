@@ -95,7 +95,10 @@ describe("httpClient error responses", () => {
     async (status, code, userMessage) => {
       server.use(
         http.get(apiUrl("/things"), () =>
-          HttpResponse.json({ message: "Internal detail" }, { status }),
+          HttpResponse.json(
+            { error: { code: "SOME_CODE", message: "Internal detail" } },
+            { status },
+          ),
         ),
       );
 
@@ -109,22 +112,60 @@ describe("httpClient error responses", () => {
     },
   );
 
-  it("shows validation messages to the user and keeps field errors", async () => {
-    const errors = { title: ["Title is required"] };
+  it("shows the first validation message and keeps the details", async () => {
+    // What the backend sends for a Zod validation error.
+    const apiError = {
+      code: "VALIDATION_ERROR",
+      message: "Invalid request data",
+      details: {
+        formErrors: [],
+        fieldErrors: { email: ["Invalid email address"] },
+      },
+    };
     server.use(
       http.post(apiUrl("/things"), () =>
-        HttpResponse.json(
-          { message: "Title is required", errors },
-          { status: 422 },
-        ),
+        HttpResponse.json({ error: apiError }, { status: 400 }),
       ),
     );
 
     const error = await appErrorFrom(httpClient.post("/things", {}));
 
     expect(error.code).toBe(ERROR_CODES.VALIDATION_ERROR);
+    expect(error.message).toBe("Invalid request data");
+    expect(error.userMessage).toBe("Invalid email address");
+    expect(error.details).toEqual(apiError);
+  });
+
+  it("uses the validation message when there are no details", async () => {
+    server.use(
+      http.post(apiUrl("/things"), () =>
+        HttpResponse.json(
+          { error: { code: "BAD_REQUEST", message: "Title is required" } },
+          { status: 400 },
+        ),
+      ),
+    );
+
+    const error = await appErrorFrom(httpClient.post("/things", {}));
+
     expect(error.userMessage).toBe("Title is required");
-    expect(error.details).toEqual(errors);
+  });
+
+  it("asks the user to wait when rate limited", async () => {
+    server.use(
+      http.post(apiUrl("/things"), () =>
+        HttpResponse.text("Too many requests, please try again later.", {
+          status: 429,
+        }),
+      ),
+    );
+
+    const error = await appErrorFrom(httpClient.post("/things", {}));
+
+    expect(error.code).toBe(ERROR_CODES.TOO_MANY_REQUESTS);
+    expect(error.userMessage).toBe(
+      "Too many attempts. Please wait a minute and try again.",
+    );
   });
 
   it("reads plain-text error bodies", async () => {

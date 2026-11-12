@@ -176,7 +176,10 @@ describe("expired access token", () => {
         () => {
           // The token expired, and so did the session behind it.
           mockSession.logOut();
-          return HttpResponse.json({ message: "Expired" }, { status: 401 });
+          return HttpResponse.json(
+            { error: { code: "UNAUTHORIZED", message: "Token expired" } },
+            { status: 401 },
+          );
         },
         { once: true },
       ),

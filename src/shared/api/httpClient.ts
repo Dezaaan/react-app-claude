@@ -56,11 +56,40 @@ export const setUnauthorizedHandler = (handler: UnauthorizedHandler | null) => {
   onUnauthorized = handler;
 };
 
-/** Error body shape we expect from the backend; every field is optional. */
-type ErrorBody = {
-  message?: unknown;
-  error?: unknown;
-  errors?: unknown;
+/**
+ * The backend's error body:
+ *   { "error": { "code": "NOT_FOUND", "message": "Note not found" } }
+ * Validation errors (400) add Zod's flattened errors as `details`:
+ *   { formErrors: string[], fieldErrors: { email?: string[], ... } }
+ */
+type ApiErrorBody = {
+  error?: {
+    code?: unknown;
+    message?: unknown;
+    details?: unknown;
+  };
+};
+
+type FlattenedErrors = {
+  formErrors?: unknown;
+  fieldErrors?: Record<string, unknown>;
+};
+
+/** First readable validation message, e.g. "Invalid email address". */
+const firstValidationMessage = (details: unknown): string | undefined => {
+  if (typeof details !== "object" || details === null) {
+    return undefined;
+  }
+
+  const { formErrors, fieldErrors } = details as FlattenedErrors;
+  const messages = [
+    ...(Array.isArray(formErrors) ? formErrors : []),
+    ...Object.values(fieldErrors ?? {}).flatMap((value) =>
+      Array.isArray(value) ? value : [],
+    ),
+  ];
+
+  return messages.find((message) => typeof message === "string");
 };
 
 const buildUrl = (path: string, query?: RequestOptions["query"]) => {
@@ -113,24 +142,24 @@ const errorFromResponse = async (response: Response): Promise<AppError> => {
     body = undefined; // An unreadable error body shouldn't hide the status.
   }
 
-  const errorBody: ErrorBody =
-    typeof body === "object" && body !== null ? body : {};
+  const apiError =
+    typeof body === "object" && body !== null
+      ? (body as ApiErrorBody).error
+      : undefined;
 
   const serverMessage =
-    typeof errorBody.message === "string"
-      ? errorBody.message
-      : typeof errorBody.error === "string"
-        ? errorBody.error
-        : typeof body === "string"
-          ? body
-          : undefined;
+    typeof apiError?.message === "string"
+      ? apiError.message
+      : typeof body === "string" // e.g. the rate limiter, or a proxy page
+        ? body
+        : undefined;
 
-  // Validation messages are written for the user ("Title is required"), so
-  // show them. Anything else may be internal detail; use our own wording.
+  // Validation messages are written for the user ("Invalid email address"),
+  // so show them. Anything else may be internal detail; use our own wording.
   const userMessage =
-    code === ERROR_CODES.VALIDATION_ERROR && serverMessage
-      ? serverMessage
-      : DEFAULT_USER_MESSAGES[code];
+    (code === ERROR_CODES.VALIDATION_ERROR &&
+      (firstValidationMessage(apiError?.details) ?? serverMessage)) ||
+    DEFAULT_USER_MESSAGES[code];
 
   return new AppError(
     serverMessage ??
@@ -138,7 +167,8 @@ const errorFromResponse = async (response: Response): Promise<AppError> => {
     code,
     response.status,
     userMessage,
-    { details: errorBody.errors ?? body },
+    // The backend's own code (e.g. "NOT_FOUND") and validation details.
+    { details: apiError ?? body },
   );
 };
 
