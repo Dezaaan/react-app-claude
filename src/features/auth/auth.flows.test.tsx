@@ -27,7 +27,14 @@ const logIn = async (password = MOCK_PASSWORD) => {
 
 /** The home page loads notes; keep the list small in tests. */
 const useFewNotes = () =>
-  server.use(http.get(apiUrl("/notes"), () => HttpResponse.json([])));
+  server.use(
+    http.get(apiUrl("/notes"), () =>
+      HttpResponse.json({
+        items: [],
+        pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
+      }),
+    ),
+  );
 
 describe("login", () => {
   it("returns to the page the user originally asked for", async () => {

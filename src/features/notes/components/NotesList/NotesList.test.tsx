@@ -10,6 +10,7 @@ const notes: Note[] = Array.from({ length: 3 }, (_, index) => ({
   title: `Note ${index + 1}`,
   content: `Content ${index + 1}`,
   createdAt: "2026-11-10T08:00:00.000Z",
+  updatedAt: "2026-11-10T08:00:00.000Z",
 }));
 
 describe("NotesList", () => {

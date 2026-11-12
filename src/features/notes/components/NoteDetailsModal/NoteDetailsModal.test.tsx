@@ -9,6 +9,7 @@ const note = {
   title: "Note 1",
   content: "This is the content of note 1",
   createdAt: "2026-11-10T08:00:00.000Z",
+  updatedAt: "2026-11-10T08:00:00.000Z",
 };
 
 describe("NoteDetailsModal", () => {

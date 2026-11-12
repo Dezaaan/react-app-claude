@@ -10,12 +10,14 @@ const notes: Note[] = [
     title: "Shopping list",
     content: "Milk and eggs",
     createdAt: "2026-11-10T08:00:00.000Z",
+    updatedAt: "2026-11-10T08:00:00.000Z",
   },
   {
     id: "b2",
     title: "Meeting notes",
     content: "Discuss the roadmap",
     createdAt: "2025-01-02T08:00:00.000Z",
+    updatedAt: "2025-01-02T08:00:00.000Z",
   },
 ];
 

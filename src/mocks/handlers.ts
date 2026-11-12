@@ -3,6 +3,7 @@ import { delay, http, HttpResponse } from "msw";
 import type { LoginCredentials } from "@/features/auth/types";
 import { apiUrl } from "@/shared/api/httpClient";
 import { getMockNotes, MOCK_PASSWORD, mockUser } from "./data";
+import { queryNotes } from "./notesQuery";
 import { mockSession } from "./session";
 
 /** The backend's error body: { error: { code, message, details? } }. */
@@ -15,6 +16,18 @@ const apiError = (
 
 const unauthorized = () =>
   apiError(401, "UNAUTHORIZED", "Authentication required");
+
+/** GET /notes: one page, or the backend's 400 for an invalid query. */
+const notesResponse = (request: Request) => {
+  const result = queryNotes(getMockNotes(), new URL(request.url).searchParams);
+
+  return result.ok
+    ? HttpResponse.json(result.page)
+    : apiError(400, "VALIDATION_ERROR", "Invalid request data", {
+        formErrors: [],
+        fieldErrors: result.fieldErrors,
+      });
+};
 
 /** Login and refresh: the user and a new access token. */
 const authResponse = (email = mockUser.email) =>
@@ -76,7 +89,7 @@ export const handlers = [
     }
 
     await delay(300);
-    return HttpResponse.json(getMockNotes());
+    return notesResponse(request);
   }),
 ];
 
@@ -128,9 +141,9 @@ export const scenarios = {
   ],
 
   "notes-slow": [
-    http.get(apiUrl("/notes"), async () => {
+    http.get(apiUrl("/notes"), async ({ request }) => {
       await delay(3000);
-      return HttpResponse.json(getMockNotes());
+      return notesResponse(request);
     }),
   ],
 };
