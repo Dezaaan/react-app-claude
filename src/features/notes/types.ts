@@ -1,3 +1,7 @@
+import type { SortOrder } from "@/shared/components/Table/types";
+
+export type { SortOrder };
+
 export type Note = {
   id: string;
   title: string;
@@ -7,9 +11,6 @@ export type Note = {
 };
 
 export type NoteSortField = "createdAt" | "updatedAt" | "title";
-
-export type { SortOrder } from "@/shared/components/Table/types";
-import type { SortOrder } from "@/shared/components/Table/types";
 
 /** GET /notes query. Every field is optional; the backend has defaults. */
 export type NotesQuery = {
@@ -25,8 +26,4 @@ export type NotesQuery = {
   sortBy?: NoteSortField;
   /** Default "desc". */
   sortOrder?: SortOrder;
-};
-
-export type NotesFeatureProps = {
-  notes: Note[];
 };

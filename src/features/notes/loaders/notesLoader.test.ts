@@ -10,8 +10,8 @@ import { loaderArgs } from "@/test/utils";
 import type { Note } from "@/features/notes/types";
 import { notesLoader } from "./notesLoader";
 
-describe("notesLoader", () => {
-  it("returns the notes from the API", async () => {
+describe("notesLoader (Home)", () => {
+  it("returns the first page from the API", async () => {
     const notes: Note[] = [
       {
         id: "1",
@@ -30,8 +30,11 @@ describe("notesLoader", () => {
       ),
     );
 
-    await expect(notesLoader(loaderArgs("/notes"))).resolves.toEqual({
-      notes,
+    await expect(notesLoader(loaderArgs("/"))).resolves.toEqual({
+      notes: {
+        items: notes,
+        pagination: { page: 1, pageSize: 100, totalItems: 1, totalPages: 1 },
+      },
     });
   });
 

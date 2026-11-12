@@ -108,6 +108,8 @@ Conventions:
     (`/notes?page=2&title=shop&sortBy=title&sortOrder=asc`); the route
     loader fetches that page. Shared pieces: `Pagination`, sortable
     `Table` headers and `useTableUrlState`.
-  - **Infinite scroll** (Home): see below.
+  - **Infinite scroll** (Home): the loader fetches the first page;
+    `useInfiniteList` appends the next one when the list nears its end
+    (one request at a time, duplicates skipped, cancelled on unmount).
 - API errors become an `AppError` (`src/shared/errors`) with a code and a
   message that is safe to show to users.
