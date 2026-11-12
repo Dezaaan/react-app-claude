@@ -2,7 +2,7 @@ import { redirect, type ActionFunctionArgs } from "react-router-dom";
 
 import { ROUTES } from "@/app/router/routes";
 import { authApi } from "@/features/auth/api/authApi";
-import { clearSession } from "@/features/auth/session";
+import { endSession } from "@/features/auth/session";
 
 /**
  * POST /logout. An action (not a link) because logging out changes state,
@@ -12,9 +12,9 @@ export const logoutAction = async ({ request }: ActionFunctionArgs) => {
   try {
     await authApi.logout({ signal: request.signal });
   } finally {
-    // Clear the cached session even if the request failed, so the next
-    // navigation asks the server again instead of trusting stale data.
-    clearSession();
+    // Forget the session and its access token even if the request failed,
+    // so nothing keeps using them. The login page then needs no refresh.
+    endSession();
   }
 
   return redirect(ROUTES.LOGIN);

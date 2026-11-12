@@ -1,15 +1,13 @@
-import type { AuthUser, Permission } from "@/features/auth/types";
+import type { AuthUser } from "@/features/auth/types";
 import type { Note } from "@/features/notes/types";
 
 export const NOTES_COUNT = 100_000;
 
 export const mockUser: AuthUser = {
-  id: "1",
+  id: "8d1f0c2e-5b7a-4c1e-9f3a-2b6d4e8a1c00",
   email: "user@example.com",
-  role: "user",
+  createdAt: "2026-01-15T09:30:00.000Z",
 };
-
-export const mockPermissions: Permission[] = ["notes.view", "notes.edit"];
 
 /** The mock login accepts any email with this password. */
 export const MOCK_PASSWORD = "password";

@@ -3,12 +3,19 @@ import type { ReactNode } from "react";
 export type Permission =
   "notes.view" | "notes.edit" | "users.view" | "users.edit";
 
-export type UserRole = "user" | "admin";
-
+/** The user as the backend returns it. */
 export type AuthUser = {
   id: string;
   email: string;
-  role: UserRole;
+  createdAt: string;
+};
+
+/** Login and refresh responses. The refresh token arrives as a cookie. */
+export type AuthResponse = {
+  user: AuthUser;
+  accessToken: string;
+  /** Seconds until `accessToken` expires. */
+  accessTokenExpiresIn: number;
 };
 
 /** A logged-in user together with what they're allowed to do. */
@@ -19,7 +26,7 @@ export type AuthState = {
 
 /**
  * What a route (or nav item) requires. Discriminated on `type` so more kinds
- * can be added later, e.g. `{ type: "role"; role: UserRole }`.
+ * can be added later, e.g. `{ type: "role"; role: "admin" }`.
  */
 export type AccessRequirement = {
   type: "permission";

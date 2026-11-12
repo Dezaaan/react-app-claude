@@ -19,6 +19,9 @@ accepts that origin). In development the API is mocked
 (see [Mock API](#mock-api)), so no backend is needed. Log in with any email
 and the password `password`.
 
+Against the real backend, sign up first (there is no sign-up page yet):
+`POST /api/v1/auth/register` with `{ "email", "password" }`.
+
 ## Scripts
 
 | Command              | What it does                                  |
@@ -62,14 +65,14 @@ In development, [MSW](https://mswjs.io) answers API requests in the browser
 
 Add `?mock=<scenario>` to any URL to try other cases until the next reload:
 
-| Scenario             | Effect                                       |
-| -------------------- | -------------------------------------------- |
-| `logged-out`         | Starts logged out (login page)               |
-| `no-permissions`     | Logged in without `notes.view`               |
-| `offline`            | Every request fails as if there's no network |
-| `notes-server-error` | Loading notes fails with a 500               |
-| `notes-forbidden`    | Loading notes fails with a 403               |
-| `notes-slow`         | Loading notes takes a few seconds            |
+| Scenario             | Effect                                                                                   |
+| -------------------- | ---------------------------------------------------------------------------------------- |
+| `logged-out`         | Starts logged out (login page)                                                           |
+| `expired-token`      | The access token expires before the next notes request; the app refreshes it and retries |
+| `offline`            | Every request fails as if there's no network                                             |
+| `notes-server-error` | Loading notes fails with a 500                                                           |
+| `notes-forbidden`    | Loading notes fails with a 403                                                           |
+| `notes-slow`         | Loading notes takes a few seconds                                                        |
 
 ## Project structure
 
@@ -94,5 +97,11 @@ Conventions:
 - Routes are declared in `src/app/router/route-config.ts`: path, page,
   loader, required permission and navigation entry. Pages load with the
   route's `lazy`, in parallel with its loader.
+- Login: the access token lives in memory only (`shared/api/accessToken.ts`);
+  on page load the session is restored with the refresh cookie. When a
+  request gets 401, `httpClient` refreshes once and repeats it
+  (`features/auth/session.ts`).
+- Permissions come from `authApi.getPermissions`. The backend doesn't send
+  any yet, so every logged-in user gets `notes.view` and `notes.edit`.
 - API errors become an `AppError` (`src/shared/errors`) with a code and a
   message that is safe to show to users.

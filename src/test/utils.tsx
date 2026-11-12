@@ -8,8 +8,11 @@ import {
 
 import { appRoutes } from "@/app/router/appRoutes";
 import { AuthProvider } from "@/features/auth/context/AuthProvider";
-import type { AuthState } from "@/features/auth/types";
-import { mockPermissions, mockUser } from "@/mocks/data";
+import type { AuthState, Permission } from "@/features/auth/types";
+import { mockUser } from "@/mocks/data";
+
+/** What a logged-in user may do (see authApi.getPermissions). */
+export const testPermissions: Permission[] = ["notes.view", "notes.edit"];
 
 /** Pages are imported (route `lazy`) on first visit, which can take a moment. */
 export const LOAD_TIMEOUT = { timeout: 5000 };
@@ -45,7 +48,7 @@ export const renderWithAuth = (
   ui: ReactNode,
   session: Partial<AuthState> = {},
 ) => {
-  const { user = mockUser, permissions = mockPermissions } = session;
+  const { user = mockUser, permissions = testPermissions } = session;
 
   const router = createMemoryRouter([
     {
