@@ -12,7 +12,11 @@ import type { TableBodyProps } from "@/shared/components/Table/types";
 import styles from "./TableBody.module.scss";
 import { ROW_HEIGHT, TableRow } from "./TableRow";
 
-export const TableBody = <T,>({ data, columns }: TableBodyProps<T>) => {
+export const TableBody = <T,>({
+  data,
+  columns,
+  firstRowIndex = 0,
+}: TableBodyProps<T>) => {
   // A callback ref (state), not useRef: react-window only exposes its element
   // after its own first render, and this re-renders us when it does.
   const [list, setList] = useListCallbackRef(null);
@@ -56,6 +60,7 @@ export const TableBody = <T,>({ data, columns }: TableBodyProps<T>) => {
       rowProps={{
         data,
         columns,
+        firstRowIndex,
       }}
       onResize={measureScrollbar}
       // The height comes from CSS (it follows the window); this is only

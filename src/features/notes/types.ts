@@ -8,7 +8,8 @@ export type Note = {
 
 export type NoteSortField = "createdAt" | "updatedAt" | "title";
 
-export type SortOrder = "asc" | "desc";
+export type { SortOrder } from "@/shared/components/Table/types";
+import type { SortOrder } from "@/shared/components/Table/types";
 
 /** GET /notes query. Every field is optional; the backend has defaults. */
 export type NotesQuery = {

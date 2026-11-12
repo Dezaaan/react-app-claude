@@ -13,6 +13,7 @@ export const ROW_HEIGHT = 48;
 type TableRowData<T> = {
   data: T[];
   columns: TableColumn<T>[];
+  firstRowIndex: number;
 };
 
 export const TableRow = <T,>({
@@ -20,6 +21,7 @@ export const TableRow = <T,>({
   style,
   data,
   columns,
+  firstRowIndex,
 }: RowComponentProps<TableRowData<T>>) => {
   const row = data[index];
 
@@ -30,7 +32,7 @@ export const TableRow = <T,>({
   return (
     <div
       role="row"
-      aria-rowindex={index + HEADER_ROW_COUNT + 1}
+      aria-rowindex={firstRowIndex + index + HEADER_ROW_COUNT + 1}
       style={{ ...style, gridTemplateColumns }}
       className={styles.row}
     >

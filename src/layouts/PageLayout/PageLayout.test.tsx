@@ -70,4 +70,67 @@ describe("PageLayout", () => {
 
     expect(progress()).not.toBeInTheDocument();
   });
+
+  describe("while the next route loads", () => {
+    const renderWithSlowLoader = () => {
+      let finish = () => {};
+      const router = createMemoryRouter([
+        {
+          element: <PageLayout />,
+          children: [
+            {
+              path: "/",
+              element: <p>Page</p>,
+              // Resolves at once the first time, then waits for finish().
+              loader: ({ request }) =>
+                new URL(request.url).search
+                  ? new Promise((resolve) => {
+                      finish = () => resolve(null);
+                    })
+                  : null,
+            },
+            {
+              path: "/other",
+              element: <p>Other</p>,
+              loader: () =>
+                new Promise((resolve) => {
+                  finish = () => resolve(null);
+                }),
+            },
+          ],
+        },
+      ]);
+      render(<RouterProvider router={router} />);
+      return { router, finish: () => finish() };
+    };
+
+    const content = () => screen.getByRole("main").lastElementChild!;
+
+    it("dims the page when leaving it", async () => {
+      const { router, finish } = renderWithSlowLoader();
+      await screen.findByText("Page");
+
+      void router.navigate("/other");
+
+      expect(
+        await screen.findByRole("progressbar", { name: "Loading page" }),
+      ).toBeInTheDocument();
+      expect(content()).toHaveClass("loading");
+      finish();
+    });
+
+    it("keeps the page usable for new results on the same page", async () => {
+      const { router, finish } = renderWithSlowLoader();
+      await screen.findByText("Page");
+
+      void router.navigate("/?page=2");
+
+      expect(
+        await screen.findByRole("progressbar", { name: "Updating results" }),
+      ).toBeInTheDocument();
+      expect(content()).not.toHaveClass("loading");
+      expect(screen.getByRole("main")).toHaveAttribute("aria-busy", "true");
+      finish();
+    });
+  });
 });

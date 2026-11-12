@@ -1,6 +1,7 @@
 import type { RouteConfig } from "./types";
 import { ROUTES } from "./routes";
 import { notesLoader } from "@/features/notes/loaders/notesLoader";
+import { notesPageLoader } from "@/features/notes/loaders/notesPageLoader";
 import { loginAction, loginLoader } from "@/features/auth/routes/login";
 
 const applicationRoutes = [
@@ -22,7 +23,7 @@ const applicationRoutes = [
   {
     path: ROUTES.NOTES,
     page: () => import("@/pages/Notes/NotesPage"),
-    loader: notesLoader,
+    loader: notesPageLoader,
     meta: {
       access: { type: "permission", permission: "notes.view" },
       layout: "application",

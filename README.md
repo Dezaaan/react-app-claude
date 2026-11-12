@@ -103,5 +103,11 @@ Conventions:
   (`features/auth/session.ts`).
 - Permissions come from `authApi.getPermissions`. The backend doesn't send
   any yet, so every logged-in user gets `notes.view` and `notes.edit`.
+- Long lists, two ways (both read the backend one page at a time):
+  - **Numbered pages** (Notes): page, filters and sorting live in the URL
+    (`/notes?page=2&title=shop&sortBy=title&sortOrder=asc`); the route
+    loader fetches that page. Shared pieces: `Pagination`, sortable
+    `Table` headers and `useTableUrlState`.
+  - **Infinite scroll** (Home): see below.
 - API errors become an `AppError` (`src/shared/errors`) with a code and a
   message that is safe to show to users.
