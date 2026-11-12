@@ -9,10 +9,10 @@ import {
 import { appRoutes } from "@/app/router/appRoutes";
 import { AuthProvider } from "@/features/auth/context/AuthProvider";
 import type { AuthState, Permission } from "@/features/auth/types";
-import { mockUser } from "@/mocks/data";
+import { mockUser, ROLE_PERMISSIONS } from "@/mocks/data";
 
-/** What a logged-in user may do (see authApi.getPermissions). */
-export const testPermissions: Permission[] = ["notes.view", "notes.edit"];
+/** What the default mock user (role "user") may do. */
+export const testPermissions: Permission[] = ROLE_PERMISSIONS.user;
 
 /** Pages are imported (route `lazy`) on first visit, which can take a moment. */
 export const LOAD_TIMEOUT = { timeout: 5000 };

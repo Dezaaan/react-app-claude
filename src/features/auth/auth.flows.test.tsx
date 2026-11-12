@@ -1,10 +1,9 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { authApi } from "@/features/auth/api/authApi";
-import { MOCK_PASSWORD } from "@/mocks/data";
+import { MOCK_PASSWORD, mockUser } from "@/mocks/data";
 import { scenarios } from "@/mocks/handlers";
 import { server } from "@/mocks/server";
 import { mockSession } from "@/mocks/session";
@@ -129,9 +128,18 @@ describe("logout", () => {
   });
 });
 
-/** Logged in, but allowed nothing. */
+/** Logged in, but allowed nothing (no current role does this). */
 const withoutPermissions = () =>
-  vi.spyOn(authApi, "getPermissions").mockResolvedValue([]);
+  server.use(
+    http.post(apiUrl("/auth/refresh"), () =>
+      HttpResponse.json({
+        user: mockUser,
+        permissions: [],
+        accessToken: mockSession.issueToken(),
+        accessTokenExpiresIn: 900,
+      }),
+    ),
+  );
 
 describe("permissions", () => {
   it("hides links to routes the user can't open", async () => {
@@ -161,6 +169,53 @@ describe("permissions", () => {
     expect(screen.getByRole("navigation")).toBeInTheDocument();
     expect(notesRequested).toBe(false);
     server.events.removeAllListeners();
+  });
+
+  it("uses the permissions from the login response", async () => {
+    mockSession.logOut();
+    server.use(
+      http.post(apiUrl("/auth/login"), () => {
+        mockSession.logIn();
+        return HttpResponse.json({
+          user: mockUser,
+          permissions: [],
+          accessToken: mockSession.issueToken(),
+          accessTokenExpiresIn: 900,
+        });
+      }),
+    );
+
+    renderApp("/about");
+    await findPageHeading("Login");
+    await logIn();
+    await findPageHeading("About");
+
+    const nav = within(screen.getByRole("navigation"));
+    expect(nav.queryByRole("link", { name: "Notes" })).not.toBeInTheDocument();
+  });
+
+  it("lets a viewer read notes", async () => {
+    server.use(...scenarios.viewer);
+
+    renderApp("/notes");
+
+    expect(await findPageHeading("Notes")).toBeInTheDocument();
+    expect(
+      await screen.findByRole("status", {}, LOAD_TIMEOUT),
+    ).toHaveTextContent(/Showing 1–20 of/);
+  });
+
+  it("shows a message, without logging out, when the API refuses", async () => {
+    // E.g. the user's role changed while they were logged in.
+    server.use(...scenarios["notes-forbidden"]);
+
+    const router = renderApp("/notes");
+
+    expect(
+      await screen.findByRole("alert", {}, LOAD_TIMEOUT),
+    ).toHaveTextContent("You don't have permission to access this page.");
+    expect(router.state.location.pathname).toBe("/notes");
+    expect(mockSession.isLoggedIn()).toBe(true);
   });
 });
 

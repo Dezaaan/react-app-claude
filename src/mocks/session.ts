@@ -1,3 +1,5 @@
+import type { Role } from "@/features/auth/types";
+
 /**
  * The mock backend's session, standing in for the refresh-token cookie and
  * the access tokens. "Logged in" is kept in sessionStorage so logging out
@@ -7,6 +9,7 @@
 const STORAGE_KEY = "mock-api:logged-in";
 
 let loggedIn = true;
+let role: Role = "user";
 let currentToken: string | null = null;
 let issuedTokens = 0;
 
@@ -33,6 +36,14 @@ const write = (value: boolean) => {
 
 export const mockSession = {
   isLoggedIn: read,
+
+  /** The logged-in user's role; the backend reads it from the database. */
+  getRole: () => role,
+
+  /** Like `npm run user:set-role` on the backend. */
+  setRole: (value: Role) => {
+    role = value;
+  },
 
   logIn: () => write(true),
 
@@ -67,6 +78,7 @@ export const mockSession = {
       // Same as above.
     }
     loggedIn = true;
+    role = "user";
     currentToken = null;
   },
 };

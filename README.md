@@ -90,8 +90,11 @@ Conventions:
   on page load the session is restored with the refresh cookie. When a
   request gets 401, `httpClient` refreshes once and repeats it
   (`features/auth/session.ts`).
-- Permissions come from `authApi.getPermissions`. The backend doesn't send
-  any yet, so every logged-in user gets `notes.view` and `notes.edit`.
+- Permissions come from the backend with login and refresh (`user` gets
+  `notes.view` and `notes.edit`, `viewer` only `notes.view`). The frontend
+  only uses them to show or hide things; the backend enforces them. Check
+  permissions (`hasPermission`), never role names. A role change reaches a
+  logged-in user at their next refresh (within 15 minutes).
 - Long lists, two ways (both read the backend one page at a time):
   - **Numbered pages** (Notes): page, filters and sorting live in the URL
     (`/notes?page=2&title=shop&sortBy=title&sortOrder=asc`); the route
