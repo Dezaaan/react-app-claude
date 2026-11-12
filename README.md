@@ -3,7 +3,7 @@
 A React app for browsing notes, with login and per-route permissions.
 
 React 19, TypeScript, Vite, React Router 7 (data router), SCSS modules,
-react-window for large lists, Vitest + Testing Library, MSW for the mock API.
+react-window for large lists, Vitest + Testing Library, MSW to mock the API in tests.
 
 ## Getting started
 
@@ -15,11 +15,10 @@ npm run dev
 ```
 
 The app runs at http://localhost:5173 (the port is fixed: the backend only
-accepts that origin). In development the API is mocked
-(see [Mock API](#mock-api)), so no backend is needed. Log in with any email
-and the password `password`.
+accepts that origin). It needs the backend running; see
+[Running against the backend](#running-against-the-backend).
 
-Against the real backend, sign up first (there is no sign-up page yet):
+There is no sign-up page yet, so create an account first:
 `POST /api/v1/auth/register` with `{ "email", "password" }`.
 
 ## Scripts
@@ -43,13 +42,12 @@ Copy `.env.example` to `.env.local` to change these:
 | ----------------------- | ----------------------- | -------------------------------------------------------------------- |
 | `VITE_API_URL`          | `/api/v1`               | Base URL of the API. Use a full URL for a backend on another origin. |
 | `VITE_API_PROXY_TARGET` | `http://localhost:3000` | Development only. Where the dev server forwards `/api` requests.     |
-| `VITE_API_MOCKS`        | `true`                  | Development only. `false` sends requests to the real API instead.    |
 
 ## Running against the backend
 
 1. Start the backend (`nodejs-app-claude`) with `CLIENT_ORIGIN=http://localhost:5173`.
-2. Create `.env.local` with `VITE_API_MOCKS=false` (and `VITE_API_PROXY_TARGET`
-   if the backend isn't on port 3000).
+2. If the backend isn't on port 3000, set `VITE_API_PROXY_TARGET` in
+   `.env.local`.
 3. `npm run dev` and open **http://localhost:5173**. Use `localhost`, not
    `127.0.0.1`: they are different sites, and the login cookie isn't shared.
 
@@ -57,22 +55,13 @@ The dev server forwards `/api` to the backend, so the browser sees a single
 origin. In production, serve the frontend and API from the same parent
 domain (see the backend README).
 
-## Mock API
+## Mock API (tests)
 
-In development, [MSW](https://mswjs.io) answers API requests in the browser
-(`src/mocks/handlers.ts`), using the service worker in
-`public/mockServiceWorker.js`. The tests use the same handlers in Node.
-
-Add `?mock=<scenario>` to any URL to try other cases until the next reload:
-
-| Scenario             | Effect                                                                                   |
-| -------------------- | ---------------------------------------------------------------------------------------- |
-| `logged-out`         | Starts logged out (login page)                                                           |
-| `expired-token`      | The access token expires before the next notes request; the app refreshes it and retries |
-| `offline`            | Every request fails as if there's no network                                             |
-| `notes-server-error` | Loading notes fails with a 500                                                           |
-| `notes-forbidden`    | Loading notes fails with a 403                                                           |
-| `notes-slow`         | Loading notes takes a few seconds                                                        |
+The tests answer API requests with [MSW](https://mswjs.io) in Node
+(`src/mocks/handlers.ts`), so they need no backend. `scenarios` in the same
+file holds the other cases (logged out, expired token, offline, server
+error, forbidden, slow notes); a test turns one on with
+`server.use(...scenarios["offline"])`.
 
 ## Project structure
 
@@ -85,7 +74,7 @@ src/
   pages/       One folder per route; pages compose feature components
   shared/      Code with no feature knowledge: API client, errors,
                Table, Modal, List, hooks, utils
-  mocks/       MSW handlers and mock data
+  mocks/       MSW handlers and mock data for the tests
   test/        Test setup and helpers
 ```
 

@@ -94,9 +94,8 @@ export const handlers = [
 ];
 
 /**
- * Failure cases, layered on top of `handlers` with `worker.use()` /
- * `server.use()`. In the browser, add `?mock=<name>` to the URL,
- * e.g. http://localhost:5173/notes?mock=notes-server-error
+ * Failure cases, layered on top of `handlers` in a test:
+ * `server.use(...scenarios["notes-server-error"])`.
  */
 export const scenarios = {
   // Start logged out. Ends the mock session once, then the normal handlers
@@ -147,8 +146,3 @@ export const scenarios = {
     }),
   ],
 };
-
-export type MockScenario = keyof typeof scenarios;
-
-export const isMockScenario = (value: string | null): value is MockScenario =>
-  value !== null && value in scenarios;

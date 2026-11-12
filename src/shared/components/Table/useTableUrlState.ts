@@ -37,8 +37,6 @@ const serialize = (filters: TableFilters, keys: readonly string[]) =>
  * reached with the back button. Filter inputs update the URL after the
  * user pauses typing (meanwhile the page's loading bar shows) and go back
  * to page 1. Sorting goes back to page 1 too.
- *
- * For rows that are all loaded already, use `useTableFilters` instead.
  */
 export const useTableUrlState = ({
   filterKeys,
