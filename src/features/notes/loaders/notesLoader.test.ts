@@ -10,15 +10,31 @@ import { loaderArgs } from "@/test/utils";
 import type { Note } from "@/features/notes/types";
 import { notesLoader } from "./notesLoader";
 
-describe("notesLoader", () => {
-  it("returns the notes from the API", async () => {
+describe("notesLoader (Home)", () => {
+  it("returns the first page from the API", async () => {
     const notes: Note[] = [
-      { id: "1", title: "A", content: "a", createdAt: "2026-01-01" },
+      {
+        id: "1",
+        title: "A",
+        content: "a",
+        createdAt: "2026-01-01T00:00:00.000Z",
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      },
     ];
-    server.use(http.get(apiUrl("/notes"), () => HttpResponse.json(notes)));
+    server.use(
+      http.get(apiUrl("/notes"), () =>
+        HttpResponse.json({
+          items: notes,
+          pagination: { page: 1, pageSize: 100, totalItems: 1, totalPages: 1 },
+        }),
+      ),
+    );
 
-    await expect(notesLoader(loaderArgs("/notes"))).resolves.toEqual({
-      notes,
+    await expect(notesLoader(loaderArgs("/"))).resolves.toEqual({
+      notes: {
+        items: notes,
+        pagination: { page: 1, pageSize: 100, totalItems: 1, totalPages: 1 },
+      },
     });
   });
 

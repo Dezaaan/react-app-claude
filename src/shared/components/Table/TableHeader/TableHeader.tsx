@@ -8,6 +8,8 @@ export const TableHeader = <T,>({
   columns,
   filters,
   onFilterChange,
+  sort,
+  onSortChange,
 }: TableHeaderProps<T>) => {
   const gridTemplateColumns = getGridTemplateColumns(columns);
 
@@ -16,6 +18,8 @@ export const TableHeader = <T,>({
       <TableHeaderRow
         columns={columns}
         gridTemplateColumns={gridTemplateColumns}
+        sort={sort}
+        onSortChange={onSortChange}
       />
 
       <TableFilterRow

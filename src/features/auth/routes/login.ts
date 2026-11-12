@@ -8,7 +8,7 @@ import { ERROR_CODES } from "@/shared/errors/errorCodes";
 import { normalizeError } from "@/shared/errors/normalizeError";
 import { authApi } from "@/features/auth/api/authApi";
 import { REDIRECT_PARAM, safeRedirect } from "@/features/auth/redirects";
-import { clearSession, getSession } from "@/features/auth/session";
+import { getSession, startSession } from "@/features/auth/session";
 
 export type LoginActionData = { error: string };
 
@@ -39,7 +39,9 @@ export const loginAction = async ({
   }
 
   try {
-    await authApi.login({ email, password }, { signal: request.signal });
+    await startSession(
+      await authApi.login({ email, password }, { signal: request.signal }),
+    );
   } catch (error) {
     const appError = normalizeError(error);
 
@@ -53,6 +55,5 @@ export const loginAction = async ({
     };
   }
 
-  clearSession();
   return redirect(safeRedirect(formData.get(REDIRECT_PARAM)));
 };

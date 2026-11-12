@@ -2,21 +2,54 @@ import { delay, http, HttpResponse } from "msw";
 
 import type { LoginCredentials } from "@/features/auth/types";
 import { apiUrl } from "@/shared/api/httpClient";
-import { getMockNotes, MOCK_PASSWORD, mockPermissions, mockUser } from "./data";
+import { getMockNotes, MOCK_PASSWORD, mockUser } from "./data";
+import { queryNotes } from "./notesQuery";
 import { mockSession } from "./session";
 
-const unauthorized = () =>
-  HttpResponse.json({ message: "Not authenticated" }, { status: 401 });
+/** The backend's error body: { error: { code, message, details? } }. */
+const apiError = (
+  status: number,
+  code: string,
+  message: string,
+  details?: unknown,
+) => HttpResponse.json({ error: { code, message, details } }, { status });
 
-/** The "happy path" backend used in development and tests. */
+const unauthorized = () =>
+  apiError(401, "UNAUTHORIZED", "Authentication required");
+
+/** GET /notes: one page, or the backend's 400 for an invalid query. */
+const notesResponse = (request: Request) => {
+  const result = queryNotes(getMockNotes(), new URL(request.url).searchParams);
+
+  return result.ok
+    ? HttpResponse.json(result.page)
+    : apiError(400, "VALIDATION_ERROR", "Invalid request data", {
+        formErrors: [],
+        fieldErrors: result.fieldErrors,
+      });
+};
+
+/** Login and refresh: the user and a new access token. */
+const authResponse = (email = mockUser.email) =>
+  HttpResponse.json({
+    user: { ...mockUser, email },
+    accessToken: mockSession.issueToken(),
+    accessTokenExpiresIn: 900,
+  });
+
+/**
+ * The "happy path" backend used in development and tests. Mirrors the real
+ * API: the refresh "cookie" is `mockSession`, and every other route needs
+ * `Authorization: Bearer <access token>`.
+ */
 export const handlers = [
-  http.get(apiUrl("/auth/me"), () =>
-    mockSession.isLoggedIn() ? HttpResponse.json(mockUser) : unauthorized(),
+  http.post(apiUrl("/auth/refresh"), () =>
+    mockSession.isLoggedIn() ? authResponse() : unauthorized(),
   ),
 
-  http.get(apiUrl("/auth/permissions"), () =>
-    mockSession.isLoggedIn()
-      ? HttpResponse.json(mockPermissions)
+  http.get(apiUrl("/auth/me"), ({ request }) =>
+    mockSession.isAuthorized(request)
+      ? HttpResponse.json({ user: mockUser })
       : unauthorized(),
   ),
 
@@ -26,27 +59,23 @@ export const handlers = [
     const { email, password } = (await request.json()) as LoginCredentials;
 
     if (!email || !password) {
-      return HttpResponse.json(
-        {
-          message: "Email and password are required.",
-          errors: {
-            ...(!email && { email: ["Email is required."] }),
-            ...(!password && { password: ["Password is required."] }),
-          },
+      return apiError(400, "VALIDATION_ERROR", "Invalid request data", {
+        formErrors: [],
+        fieldErrors: {
+          ...(!email && { email: ["Invalid email address"] }),
+          ...(!password && {
+            password: ["Too small: expected string to have >=1 characters"],
+          }),
         },
-        { status: 422 },
-      );
+      });
     }
 
     if (password !== MOCK_PASSWORD) {
-      return HttpResponse.json(
-        { message: "Invalid credentials" },
-        { status: 401 },
-      );
+      return apiError(401, "UNAUTHORIZED", "Invalid email or password");
     }
 
     mockSession.logIn();
-    return HttpResponse.json({ ...mockUser, email });
+    return authResponse(email);
   }),
 
   http.post(apiUrl("/auth/logout"), () => {
@@ -54,9 +83,13 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
-  http.get(apiUrl("/notes"), async () => {
+  http.get(apiUrl("/notes"), async ({ request }) => {
+    if (!mockSession.isAuthorized(request)) {
+      return unauthorized();
+    }
+
     await delay(300);
-    return HttpResponse.json(getMockNotes());
+    return notesResponse(request);
   }),
 ];
 
@@ -69,8 +102,8 @@ export const scenarios = {
   // Start logged out. Ends the mock session once, then the normal handlers
   // take over, so logging in from the form works afterwards.
   "logged-out": [
-    http.get(
-      apiUrl("/auth/me"),
+    http.post(
+      apiUrl("/auth/refresh"),
       () => {
         mockSession.logOut();
         return unauthorized();
@@ -79,10 +112,17 @@ export const scenarios = {
     ),
   ],
 
-  // Logged in, but allowed nothing: the Notes link disappears and /notes
-  // shows the permission error.
-  "no-permissions": [
-    http.get(apiUrl("/auth/permissions"), () => HttpResponse.json([])),
+  // The access token expires before the next notes request: the app
+  // refreshes it once and repeats the request, without the user noticing.
+  "expired-token": [
+    http.get(
+      apiUrl("/notes"),
+      () => {
+        mockSession.expireToken();
+        return unauthorized();
+      },
+      { once: true },
+    ),
   ],
 
   // No response at all, like being offline or the server being down.
@@ -90,23 +130,20 @@ export const scenarios = {
 
   "notes-server-error": [
     http.get(apiUrl("/notes"), () =>
-      HttpResponse.json(
-        { message: "Database connection lost" },
-        { status: 500 },
-      ),
+      apiError(500, "INTERNAL_SERVER_ERROR", "An unexpected error occurred"),
     ),
   ],
 
   "notes-forbidden": [
     http.get(apiUrl("/notes"), () =>
-      HttpResponse.json({ message: "Missing notes.view" }, { status: 403 }),
+      apiError(403, "FORBIDDEN", "Missing notes.view"),
     ),
   ],
 
   "notes-slow": [
-    http.get(apiUrl("/notes"), async () => {
+    http.get(apiUrl("/notes"), async ({ request }) => {
       await delay(3000);
-      return HttpResponse.json(getMockNotes());
+      return notesResponse(request);
     }),
   ],
 };

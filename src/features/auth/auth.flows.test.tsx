@@ -1,8 +1,9 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
+import { authApi } from "@/features/auth/api/authApi";
 import { MOCK_PASSWORD } from "@/mocks/data";
 import { scenarios } from "@/mocks/handlers";
 import { server } from "@/mocks/server";
@@ -26,7 +27,14 @@ const logIn = async (password = MOCK_PASSWORD) => {
 
 /** The home page loads notes; keep the list small in tests. */
 const useFewNotes = () =>
-  server.use(http.get(apiUrl("/notes"), () => HttpResponse.json([])));
+  server.use(
+    http.get(apiUrl("/notes"), () =>
+      HttpResponse.json({
+        items: [],
+        pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
+      }),
+    ),
+  );
 
 describe("login", () => {
   it("returns to the page the user originally asked for", async () => {
@@ -103,11 +111,31 @@ describe("logout", () => {
     expect(router.state.location.pathname).toBe("/login");
     expect(mockSession.isLoggedIn()).toBe(false);
   });
+
+  it("doesn't ask the server again whether we're logged in", async () => {
+    renderApp("/about");
+    await findPageHeading("About");
+    let refreshed = false;
+    server.events.on("request:start", ({ request }) => {
+      if (request.url === apiUrl("/auth/refresh")) refreshed = true;
+    });
+
+    await userEvent.click(screen.getByRole("button", { name: "Open menu" }));
+    await userEvent.click(screen.getByRole("button", { name: "Log out" }));
+    await findPageHeading("Login");
+
+    expect(refreshed).toBe(false);
+    server.events.removeAllListeners();
+  });
 });
+
+/** Logged in, but allowed nothing. */
+const withoutPermissions = () =>
+  vi.spyOn(authApi, "getPermissions").mockResolvedValue([]);
 
 describe("permissions", () => {
   it("hides links to routes the user can't open", async () => {
-    server.use(...scenarios["no-permissions"]);
+    withoutPermissions();
 
     renderApp("/about");
     await findPageHeading("About");
@@ -118,7 +146,7 @@ describe("permissions", () => {
   });
 
   it("blocks the route without requesting its data", async () => {
-    server.use(...scenarios["no-permissions"]);
+    withoutPermissions();
     let notesRequested = false;
     server.events.on("request:start", ({ request }) => {
       if (request.url === apiUrl("/notes")) notesRequested = true;
@@ -133,5 +161,40 @@ describe("permissions", () => {
     expect(screen.getByRole("navigation")).toBeInTheDocument();
     expect(notesRequested).toBe(false);
     server.events.removeAllListeners();
+  });
+});
+
+describe("expired access token", () => {
+  it("refreshes it and repeats the request without the user noticing", async () => {
+    server.use(...scenarios["expired-token"]);
+
+    renderApp("/notes");
+
+    expect(await findPageHeading("Notes")).toBeInTheDocument();
+    expect(await screen.findByRole("table")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    // The retry itself is tested in session.test.ts.
+  });
+
+  it("goes to the login page when the session has ended", async () => {
+    server.use(
+      http.get(
+        apiUrl("/notes"),
+        () => {
+          // The token expired, and so did the session behind it.
+          mockSession.logOut();
+          return HttpResponse.json(
+            { error: { code: "UNAUTHORIZED", message: "Token expired" } },
+            { status: 401 },
+          );
+        },
+        { once: true },
+      ),
+    );
+
+    const router = renderApp("/notes");
+
+    expect(await findPageHeading("Login")).toBeInTheDocument();
+    expect(router.state.location.search).toBe("?redirectTo=%2Fnotes");
   });
 });

@@ -1,134 +1,157 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-  within,
-} from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { PageLayout } from "@/layouts/PageLayout/PageLayout";
-import type { Note } from "@/features/notes/types";
-import { NotesTable } from "./NotesTable";
+import { server } from "@/mocks/server";
+import { apiUrl } from "@/shared/api/httpClient";
+import { LOAD_TIMEOUT, renderApp } from "@/test/utils";
 
-const notes: Note[] = Array.from({ length: 3 }, (_, index) => ({
-  id: String(index + 1),
-  title: `Note ${index + 1}`,
-  content: `Content ${index + 1}`,
-  createdAt: "2026-11-10T08:00:00.000Z",
-}));
+// The Notes page on the real route tree, against the mock backend's 1,000
+// notes ("Note 1" is the newest).
 
-describe("NotesTable", () => {
-  it("is a table with column headers, labelled filters and numbered rows", () => {
-    render(<NotesTable notes={notes} />);
+const status = () => screen.getByRole("status");
 
-    const table = screen.getByRole("table", { name: "Notes" });
-    // Two header rows (titles, filters) plus the data rows.
-    expect(table).toHaveAttribute("aria-rowcount", "5");
+const openNotes = async (path = "/notes") => {
+  const router = renderApp(path);
+  await screen.findByRole("table", { name: "Notes" }, LOAD_TIMEOUT);
+  return router;
+};
 
-    expect(
-      within(table)
-        .getAllByRole("columnheader")
-        .map((header) => header.textContent),
-    ).toEqual(["ID", "Title", "Content", "Created At"]);
+const titles = () =>
+  screen
+    .getAllByRole("row")
+    .slice(2) // the header rows
+    .map((row) => within(row).getAllByRole("cell")[0].textContent);
 
-    expect(
-      screen.getByRole("searchbox", { name: "Filter by Title" }),
-    ).toBeInTheDocument();
+/** Records the query of every GET /notes. */
+const recordNotesQueries = () => {
+  const queries: string[] = [];
+  server.events.on("request:start", ({ request }) => {
+    const url = new URL(request.url);
+    if (url.href.startsWith(apiUrl("/notes"))) queries.push(url.search);
+  });
+  return queries;
+};
 
-    const rows = within(table).getAllByRole("row");
-    const firstDataRow = rows[2];
-    expect(firstDataRow).toHaveAttribute("aria-rowindex", "3");
-    expect(
-      within(firstDataRow).getByRole("cell", { name: "Note 1" }),
-    ).toBeInTheDocument();
+describe("Notes page", () => {
+  it("shows the first page, newest first, with page links", async () => {
+    await openNotes();
+
+    expect(status()).toHaveTextContent("Showing 1–20 of 1,000 notes");
+    expect(titles().slice(0, 2)).toEqual(["Note 1", "Note 2"]);
+    expect(screen.getByRole("table")).toHaveAttribute("aria-rowcount", "1002");
+    expect(screen.getByRole("link", { name: "Page 1" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "Page 50" })).toBeInTheDocument();
   });
 
-  it("announces how many notes match the filters", async () => {
-    render(<NotesTable notes={notes} />);
-    expect(screen.getByRole("status")).toHaveTextContent("3 notes");
+  it("goes to another page with a link, and back", async () => {
+    const router = await openNotes();
+
+    await userEvent.click(screen.getByRole("link", { name: "Page 2" }));
+
+    await waitFor(() =>
+      expect(status()).toHaveTextContent("Showing 21–40 of 1,000 notes"),
+    );
+    expect(router.state.location.search).toBe("?page=2");
+    expect(titles()[0]).toBe("Note 21");
+
+    await router.navigate(-1);
+    await waitFor(() => expect(titles()[0]).toBe("Note 1"));
+  });
+
+  it("filters by title on the server and starts again from page 1", async () => {
+    const router = await openNotes("/notes?page=3");
+    const queries = recordNotesQueries();
 
     await userEvent.type(
       screen.getByRole("searchbox", { name: "Filter by Title" }),
-      "Note 2",
+      "note 99",
     );
 
-    expect(await screen.findByText("Showing 1 of 3 notes")).toBeInTheDocument();
-    expect(screen.getByRole("table")).toHaveAttribute("aria-rowcount", "3");
+    // "Note 99" and "Note 990" to "Note 999".
+    await waitFor(() => expect(status()).toHaveTextContent("11 notes"));
+    expect(router.state.location.search).toBe("?title=note+99");
+    // One request after the user paused typing, not one per key.
+    expect(queries).toHaveLength(1);
+    server.events.removeAllListeners();
   });
 
-  it("shows the page loading bar until the filtered rows are ready", async () => {
-    const router = createMemoryRouter([
-      {
-        element: <PageLayout />,
-        children: [{ index: true, element: <NotesTable notes={notes} /> }],
-      },
-    ]);
-    render(<RouterProvider router={router} />);
-    const progress = () =>
-      screen.queryByRole("progressbar", { name: "Updating results" });
-    expect(progress()).not.toBeInTheDocument();
+  it("searches title and content with the search box", async () => {
+    await openNotes();
 
     await userEvent.type(
-      screen.getByRole("searchbox", { name: "Filter by Title" }),
-      "Note 2",
+      screen.getByRole("searchbox", { name: "Search notes" }),
+      "content of note 500",
     );
 
-    expect(progress()).toBeInTheDocument();
-    expect(screen.getByRole("status")).toHaveTextContent("3 notes");
-
-    await waitForElementToBeRemoved(progress);
-
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Showing 1 of 3 notes",
-    );
+    await waitFor(() => expect(status()).toHaveTextContent("1 note"));
+    expect(titles()).toEqual(["Note 500"]);
   });
 
-  it("says so when no note matches", async () => {
-    render(<NotesTable notes={notes} />);
-
-    await userEvent.type(
-      screen.getByRole("searchbox", { name: "Filter by Title" }),
-      "nothing like this",
-    );
-
-    expect(
-      await screen.findByRole("cell", { name: "No results" }),
-    ).toBeInTheDocument();
-  });
-
-  describe("header alignment", () => {
-    afterEach(() => {
-      vi.unstubAllGlobals();
-    });
-
-    const scrollbarWidth = () =>
+  it("sorts by a column header, then reverses on the second click", async () => {
+    const router = await openNotes();
+    const titleHeader = () =>
       screen
-        .getByRole("table")
-        .style.getPropertyValue("--table-scrollbar-width");
+        .getAllByRole("columnheader")
+        .find((header) => header.textContent?.startsWith("Title"))!;
 
-    it("leaves room above the body's scrollbar, and none without one", async () => {
-      // jsdom has no layout: pretend the rows overflow and a 15px
-      // scrollbar takes space inside the body.
-      vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(
-        1000,
-      );
-      vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(
-        985,
-      );
-      render(<NotesTable notes={notes} />);
+    await userEvent.click(within(titleHeader()).getByRole("button"));
 
-      expect(scrollbarWidth()).toBe("15px");
+    await waitFor(() =>
+      expect(titleHeader()).toHaveAttribute("aria-sort", "ascending"),
+    );
+    expect(router.state.location.search).toBe("?sortBy=title&sortOrder=asc");
+    await waitFor(() => expect(titles()[0]).toBe("Note 1"));
+    expect(titles()[1]).toBe("Note 10");
 
-      // With no rows there is no scrolling list, so no scrollbar.
-      await userEvent.type(
-        screen.getByRole("searchbox", { name: "Filter by Title" }),
-        "nothing like this",
-      );
-      await screen.findByRole("cell", { name: "No results" });
+    await userEvent.click(within(titleHeader()).getByRole("button"));
 
-      expect(scrollbarWidth()).toBe("0px");
-    });
+    await waitFor(() => expect(titles()[0]).toBe("Note 999"));
+    expect(titleHeader()).toHaveAttribute("aria-sort", "descending");
+  });
+
+  it("changes the page size", async () => {
+    const router = await openNotes("/notes?page=4");
+
+    await userEvent.selectOptions(
+      screen.getByRole("combobox", { name: "Rows per page" }),
+      "50",
+    );
+
+    await waitFor(() =>
+      expect(status()).toHaveTextContent("Showing 1–50 of 1,000 notes"),
+    );
+    expect(router.state.location.search).toBe("?pageSize=50");
+  });
+
+  it("restores the filter input from the URL on back and forward", async () => {
+    const router = await openNotes("/notes?title=note+5");
+    const titleFilter = () =>
+      screen.getByRole("searchbox", { name: "Filter by Title" });
+    expect(titleFilter()).toHaveValue("note 5");
+
+    await userEvent.click(screen.getByRole("link", { name: "About" }));
+    await screen.findByRole("heading", { name: "About", level: 1 });
+    await router.navigate(-1);
+
+    await waitFor(() => expect(titleFilter()).toHaveValue("note 5"));
+  });
+
+  it("clears the filter input when the URL drops the filter", async () => {
+    await openNotes("/notes?title=note+5");
+    const titleFilter = () =>
+      screen.getByRole("searchbox", { name: "Filter by Title" });
+    expect(titleFilter()).toHaveValue("note 5");
+
+    // Same page, so the table stays mounted; only the URL changes.
+    await userEvent.click(screen.getByRole("link", { name: "Notes" }));
+
+    await waitFor(() => expect(titleFilter()).toHaveValue(""));
+    await waitFor(() =>
+      expect(status()).toHaveTextContent("Showing 1–20 of 1,000 notes"),
+    );
   });
 });
