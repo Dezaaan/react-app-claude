@@ -95,18 +95,20 @@ export const endSession = () => {
 };
 
 // An API request got 401: the access token expired (it lives 15 minutes).
-// Refresh once and let httpClient retry; if that fails too, the session is
-// over and the next navigation goes to the login page.
+// Refresh once and let httpClient retry.
+//
+// Only a 401 from refresh means the session is over (the next navigation
+// goes to the login page). Any other failure, like being offline or the
+// auth rate limit (429), says nothing about the session: the cookie may
+// well be valid. Then the request fails with that error, so the page shows
+// "Unable to connect" or "Too many attempts", and the next request tries
+// again.
 setUnauthorizedHandler(async () => {
-  try {
-    const session = await refreshSession();
+  const session = await refreshSession();
 
-    if (session) {
-      sessionPromise = Promise.resolve(session);
-      return true;
-    }
-  } catch {
-    // Treat a failed refresh (e.g. offline) like an ended session below.
+  if (session) {
+    sessionPromise = Promise.resolve(session);
+    return true;
   }
 
   clearSession();
