@@ -1,22 +1,26 @@
 .overlay {
   position: fixed;
   inset: 0;
+  z-index: 1000;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  background: rgba(0, 0, 0, 0.45);
-
-  z-index: 1000;
+  background: var(--overlay);
 }
 
 .modal {
   // Stay usable on small screens and when zoomed in.
-  max-width: calc(100vw - 2rem);
+  width: min(28rem, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   max-height: calc(100dvh - 2rem);
   overflow: auto;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
 
   // Focus lands on the dialog itself only when it has nothing focusable.
   &:focus {

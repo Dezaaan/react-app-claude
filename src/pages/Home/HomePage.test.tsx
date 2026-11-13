@@ -8,10 +8,11 @@ import { LOAD_TIMEOUT, renderApp } from "@/test/utils";
 
 // Home on the real route tree, against the mock backend's notes.
 
+/** The notes in the list, by title (each note's button is named by it). */
 const notesShown = () =>
   within(screen.getByRole("list", { name: "Notes" }))
     .getAllByRole("listitem")
-    .map((item) => item.textContent);
+    .map((item) => within(item).getByRole("button"));
 
 describe("Home page", () => {
   it("shows the newest notes first, and how many there are", async () => {
@@ -20,7 +21,10 @@ describe("Home page", () => {
     expect(
       await screen.findByText("20 of 1000 notes loaded", {}, LOAD_TIMEOUT),
     ).toBeInTheDocument();
-    expect(notesShown()[0]).toBe("Note 1");
+    expect(notesShown()[0]).toHaveAccessibleName("Note 1");
+    expect(notesShown()[0]).toHaveAccessibleDescription(
+      /^\d{2}\/\d{2}\/\d{4} This is the content of note 1/,
+    );
   });
 
   it("loads the next page when the first one doesn't fill the list", async () => {

@@ -1,0 +1,96 @@
+/*
+ * Design tokens: the colors, sizes and fonts every component uses.
+ * Components read these (var(--accent)) instead of hardcoding values, so
+ * the look changes in one place, and dark mode only overrides colors.
+ */
+:root {
+  /* Text */
+  --text: #5f5868; /* body text, secondary labels */
+  --text-h: #08060d; /* headings, primary content */
+  --text-muted: #6b6375; /* hints, counts, placeholders */
+
+  /* Backgrounds */
+  --bg: #fff; /* the page */
+  --surface: #fff; /* inputs, cards, table rows */
+  --surface-raised: #fafafa; /* headers, menus, the login card */
+  --surface-hover: #f4f3ec;
+  --surface-active: #ebe8dc;
+  --overlay: rgba(0, 0, 0, 0.45); /* behind modals */
+
+  --border: #e5e4e7;
+  --border-strong: #c9c6cf; /* form controls */
+
+  /* Brand color: links, the current page, primary buttons. */
+  --accent: #8b2fd9;
+  --accent-hover: #7a22c6;
+  --accent-bg: rgba(139, 47, 217, 0.1);
+  --on-accent: #fff; /* text on an accent background */
+
+  /* Errors */
+  --danger: #c5221f;
+  --danger-bg: rgba(197, 34, 31, 0.08);
+
+  --focus-ring: 0 0 0 3px rgba(139, 47, 217, 0.35);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  /* Fonts */
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --heading: var(--sans);
+  --mono: ui-monospace, Consolas, monospace;
+
+  --font-sm: 0.875rem; /* 14px: tables, hints, secondary text */
+  --font-md: 1rem; /* 16px: body text, form controls */
+  --font-lg: 1.25rem; /* 20px: h2, modal titles */
+  --font-xl: 1.75rem; /* 28px: page titles (h1) */
+
+  /* Spacing, on a 4px grid */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius-sm: 4px; /* small controls inside tables */
+  --radius: 6px; /* buttons, inputs */
+  --radius-lg: 8px; /* cards, menus, modals, the table */
+
+  /* Layout */
+  --content-width: 1200px;
+  --header-height: 64px;
+  --control-height: 2.5rem; /* buttons and inputs line up */
+  --control-height-sm: 2rem;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #b4b8c0;
+    --text-h: #f3f4f6;
+    --text-muted: #9ca3af;
+
+    --bg: #16171d;
+    --surface: #1f2028;
+    --surface-raised: #252631;
+    --surface-hover: #2e303a;
+    --surface-active: #3a3c48;
+    --overlay: rgba(0, 0, 0, 0.65);
+
+    --border: #2e303a;
+    --border-strong: #4a4d5a;
+
+    --accent: #c084fc;
+    --accent-hover: #d0a2fd;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --on-accent: #16171d;
+
+    --danger: #f28b82;
+    --danger-bg: rgba(242, 139, 130, 0.12);
+
+    --focus-ring: 0 0 0 3px rgba(192, 132, 252, 0.45);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+}

@@ -1,8 +1,11 @@
 import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
 
 import { scenarios } from "@/mocks/handlers";
 import { server } from "@/mocks/server";
+import { apiUrl } from "@/shared/api/httpClient";
 import { LOAD_TIMEOUT, renderApp as renderAt } from "@/test/utils";
 
 // These tests mock only the network (via MSW), so each one runs the real
@@ -63,6 +66,26 @@ describe("app routes", () => {
     expect(screen.getByRole("navigation")).toBeInTheDocument();
   });
 
+  it("loads the page again when the user tries again", async () => {
+    // Fails once, then the normal handler answers.
+    server.use(
+      http.get(
+        apiUrl("/notes"),
+        () => HttpResponse.json({ error: {} }, { status: 500 }),
+        { once: true },
+      ),
+    );
+
+    renderAt("/notes");
+    await screen.findByRole("alert", {}, LOAD_TIMEOUT);
+    await userEvent.click(screen.getByRole("button", { name: "Try again" }));
+
+    expect(
+      await screen.findByRole("heading", { name: "Notes", level: 1 }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
   it("shows a permission error when the API answers 403", async () => {
     server.use(...scenarios["notes-forbidden"]);
 
@@ -71,6 +94,10 @@ describe("app routes", () => {
     expect(
       await screen.findByRole("alert", {}, LOAD_TIMEOUT),
     ).toHaveTextContent("You don't have permission to access this page.");
+    // Trying again wouldn't help.
+    expect(
+      screen.queryByRole("button", { name: "Try again" }),
+    ).not.toBeInTheDocument();
   });
 
   it("renders the not-found page for unknown paths", async () => {

@@ -6,16 +6,14 @@
 }
 
 .table {
-  // Border included in the width, so the table never overflows its parent.
-  box-sizing: border-box;
   width: 100%;
 
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 
   text-align: left;
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .cell {

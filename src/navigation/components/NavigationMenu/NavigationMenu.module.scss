@@ -3,16 +3,19 @@
 }
 
 .trigger {
-  padding: 0.5rem;
+  min-width: var(--control-height);
+  min-height: var(--control-height);
+  padding: var(--space-2);
+
+  color: var(--text-h);
+  background: transparent;
 
   border: none;
-  border-radius: 6px;
-
-  background: transparent;
+  border-radius: var(--radius);
 
   cursor: pointer;
 
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 
 .trigger:hover {

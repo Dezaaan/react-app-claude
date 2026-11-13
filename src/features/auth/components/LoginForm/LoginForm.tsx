@@ -7,6 +7,7 @@ import {
 
 import { REDIRECT_PARAM } from "@/features/auth/redirects";
 import type { LoginActionData } from "@/features/auth/routes/login";
+import { Button } from "@/shared/components/Button/Button";
 import styles from "./LoginForm.module.scss";
 
 /**
@@ -59,9 +60,15 @@ export const LoginForm = () => {
         </p>
       )}
 
-      <button type="submit" className={styles.submit} disabled={isSubmitting}>
+      <Button
+        type="submit"
+        variant="primary"
+        className={styles.submit}
+        disabled={isSubmitting}
+        aria-busy={isSubmitting}
+      >
         {isSubmitting ? "Logging in..." : "Log in"}
-      </button>
+      </Button>
     </Form>
   );
 };

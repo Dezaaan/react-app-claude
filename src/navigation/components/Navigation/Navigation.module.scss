@@ -1,5 +1,7 @@
+// Page links on the left, the user menu on the right.
 .navigation {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: var(--space-4);
 }

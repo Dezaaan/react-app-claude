@@ -1,7 +1,7 @@
 import { useId } from "react";
 
+import { Button } from "@/shared/components/Button/Button";
 import { Modal } from "@/shared/components/Modal";
-import styles from "./ConfirmationModal.module.scss";
 
 type ConfirmationModalProps = {
   body: string;
@@ -30,23 +30,18 @@ export const ConfirmationModal = ({
     <Modal
       open={isOpen}
       onClose={onCancel}
-      className={styles.container}
       role="alertdialog"
       aria-describedby={bodyId}
     >
       <Modal.Header>{title}</Modal.Header>
 
-      <Modal.Body id={bodyId} className={styles.body}>
-        {body}
-      </Modal.Body>
+      <Modal.Body id={bodyId}>{body}</Modal.Body>
 
       <Modal.Footer>
-        <button type="button" onClick={onCancel} className={styles.cancel}>
-          {cancelLabel}
-        </button>
-        <button type="button" onClick={onConfirm} className={styles.confirm}>
+        <Button onClick={onCancel}>{cancelLabel}</Button>
+        <Button variant="primary" onClick={onConfirm}>
           {confirmLabel}
-        </button>
+        </Button>
       </Modal.Footer>
     </Modal>
   );

@@ -1,3 +1,4 @@
+import { Button } from "@/shared/components/Button/Button";
 import { Modal } from "@/shared/components/Modal";
 import type { Note } from "@/features/notes/types";
 import styles from "./NoteDetailsModal.module.scss";
@@ -9,15 +10,13 @@ type NoteDetailsModalProps = {
 
 export const NoteDetailsModal = ({ note, onClose }: NoteDetailsModalProps) => {
   return (
-    <Modal open={note !== null} onClose={onClose} className={styles.container}>
+    <Modal open={note !== null} onClose={onClose}>
       <Modal.Header>{note?.title}</Modal.Header>
 
-      <Modal.Body className={styles.body}>{note?.content}</Modal.Body>
+      <Modal.Body className={styles.content}>{note?.content}</Modal.Body>
 
       <Modal.Footer>
-        <button type="button" onClick={onClose} className={styles.close}>
-          Close
-        </button>
+        <Button onClick={onClose}>Close</Button>
       </Modal.Footer>
     </Modal>
   );

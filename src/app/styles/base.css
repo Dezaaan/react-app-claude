@@ -1,0 +1,141 @@
+/*
+ * Base styles for plain HTML elements. Components add layout on top; they
+ * don't need to restyle text, links or form controls.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font: 400 var(--font-md) / 1.5 var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Text */
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--heading);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: var(--font-xl);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: var(--font-lg);
+}
+
+h3 {
+  font-size: var(--font-md);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+}
+
+code {
+  padding: 0.125em 0.375em;
+  font-family: var(--mono);
+  font-size: 0.9em;
+  color: var(--text-h);
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+}
+
+/* Keyboard focus: one visible style everywhere. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Form controls */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+input:not([type="checkbox"], [type="radio"], [type="range"]),
+select,
+textarea {
+  min-height: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+
+  color: var(--text-h);
+  background: var(--surface);
+
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--text-muted);
+  }
+
+  &:focus-visible {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  &[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

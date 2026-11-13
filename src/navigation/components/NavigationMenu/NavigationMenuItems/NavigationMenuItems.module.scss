@@ -17,7 +17,8 @@
   background: var(--surface-raised);
 
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 
   box-shadow: var(--shadow);
 
@@ -26,13 +27,13 @@
 
 .user {
   margin: 0;
-  padding: 0.75rem 1rem;
+  padding: var(--space-3) var(--space-4);
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
   color: var(--text);
 
   border-bottom: 1px solid var(--border);
@@ -41,12 +42,9 @@
 .link,
 .button {
   display: flex;
-  justify-content: center;
   width: 100%;
 
-  box-sizing: border-box;
-
-  padding: 0.75rem 1rem;
+  padding: var(--space-3) var(--space-4);
 
   color: var(--text-h);
   background: transparent;
@@ -58,16 +56,12 @@
 
   cursor: pointer;
 
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 
 .link:hover,
 .button:hover {
   background: var(--surface-hover);
-}
-
-.button {
-  font: inherit;
 }
 
 .active {

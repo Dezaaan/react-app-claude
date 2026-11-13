@@ -1,11 +1,8 @@
 .header {
-  padding: 1.5rem;
+  padding: var(--space-4) var(--space-6);
   border-bottom: 1px solid var(--border);
 }
 
 .title {
   margin: 0;
-
-  font-size: 1.25rem;
-  color: var(--text-h);
 }

@@ -1,5 +1,7 @@
 .navLinks {
   display: flex;
+  // List's default variant is a column.
   flex-direction: row;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-6);
 }
