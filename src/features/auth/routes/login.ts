@@ -39,7 +39,7 @@ export const loginAction = async ({
   }
 
   try {
-    await startSession(
+    startSession(
       await authApi.login({ email, password }, { signal: request.signal }),
     );
   } catch (error) {

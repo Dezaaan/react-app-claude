@@ -18,12 +18,17 @@ let sessionPromise: Promise<AuthState | null> | null = null;
 /** The refresh request in flight, if any. */
 let refreshPromise: Promise<AuthState | null> | null = null;
 
-const toSession = async ({
+/**
+ * Login and refresh both return the user's permissions, so a role change
+ * shows up at the next refresh (the access token lives 15 minutes).
+ */
+const toSession = ({
   user,
+  permissions,
   accessToken: token,
-}: AuthResponse): Promise<AuthState> => {
+}: AuthResponse): AuthState => {
   accessToken.set(token);
-  return { user, permissions: await authApi.getPermissions() };
+  return { user, permissions };
 };
 
 const isUnauthorized = (error: unknown) =>
@@ -71,8 +76,8 @@ export const getSession = (): Promise<AuthState | null> => {
 };
 
 /** After logging in: use the response instead of asking the server again. */
-export const startSession = async (response: AuthResponse) => {
-  const session = await toSession(response);
+export const startSession = (response: AuthResponse) => {
+  const session = toSession(response);
   sessionPromise = Promise.resolve(session);
   return session;
 };

@@ -1,4 +1,4 @@
-import type { AuthUser } from "@/features/auth/types";
+import type { AuthUser, Permission, Role } from "@/features/auth/types";
 import type { Note } from "@/features/notes/types";
 
 /** Enough for many pages (20 per page by default) and infinite scrolling. */
@@ -7,7 +7,14 @@ export const NOTES_COUNT = 1_000;
 export const mockUser: AuthUser = {
   id: "8d1f0c2e-5b7a-4c1e-9f3a-2b6d4e8a1c00",
   email: "user@example.com",
+  role: "user",
   createdAt: "2026-01-15T09:30:00.000Z",
+};
+
+/** The backend's role-to-permission mapping. */
+export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
+  user: ["notes.view", "notes.edit"],
+  viewer: ["notes.view"],
 };
 
 /** The mock login accepts any email with this password. */

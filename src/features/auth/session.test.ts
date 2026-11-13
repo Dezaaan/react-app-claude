@@ -28,6 +28,30 @@ describe("getSession", () => {
     expect(accessToken.get()).toEqual(expect.any(String));
   });
 
+  it("takes the permissions from the refresh response", async () => {
+    server.use(...scenarios.viewer);
+
+    await expect(getSession()).resolves.toEqual({
+      user: { ...mockUser, role: "viewer" },
+      permissions: ["notes.view"],
+    });
+  });
+
+  it("picks up a role change at the next refresh", async () => {
+    await expect(getSession()).resolves.toMatchObject({
+      permissions: testPermissions,
+    });
+
+    // The token expires; meanwhile an operator made the user a viewer.
+    mockSession.setRole("viewer");
+    mockSession.expireToken();
+    await httpClient.get("/auth/me");
+
+    await expect(getSession()).resolves.toMatchObject({
+      permissions: ["notes.view"],
+    });
+  });
+
   it("returns null when logged out", async () => {
     server.use(...scenarios["logged-out"]);
 
@@ -71,13 +95,17 @@ describe("getSession", () => {
   it("uses the login response without asking the server again", async () => {
     const refreshes = countRequests("/auth/refresh");
 
-    await startSession({
+    startSession({
       user: mockUser,
+      permissions: ["notes.view"],
       accessToken: "from-login",
       accessTokenExpiresIn: 900,
     });
 
-    await expect(getSession()).resolves.toMatchObject({ user: mockUser });
+    await expect(getSession()).resolves.toEqual({
+      user: mockUser,
+      permissions: ["notes.view"],
+    });
     expect(accessToken.get()).toBe("from-login");
     expect(refreshes.count).toBe(0);
     server.events.removeAllListeners();
@@ -96,7 +124,9 @@ describe("expired access token", () => {
       httpClient.get("/auth/me"),
     ]);
 
-    expect(results).toEqual(Array(3).fill({ user: mockUser }));
+    expect(results).toEqual(
+      Array(3).fill({ user: mockUser, permissions: testPermissions }),
+    );
     // Two refreshes with the same cookie would end the session (reuse).
     expect(refreshes.count).toBe(1);
     server.events.removeAllListeners();

@@ -2,7 +2,12 @@ import { delay, http, HttpResponse } from "msw";
 
 import type { LoginCredentials } from "@/features/auth/types";
 import { apiUrl } from "@/shared/api/httpClient";
-import { getMockNotes, MOCK_PASSWORD, mockUser } from "./data";
+import {
+  getMockNotes,
+  MOCK_PASSWORD,
+  mockUser,
+  ROLE_PERMISSIONS,
+} from "./data";
 import { queryNotes } from "./notesQuery";
 import { mockSession } from "./session";
 
@@ -29,10 +34,19 @@ const notesResponse = (request: Request) => {
       });
 };
 
-/** Login and refresh: the user and a new access token. */
+/** The logged-in user, with the mock session's role. */
+const currentUser = (email = mockUser.email) => {
+  const role = mockSession.getRole();
+  return {
+    user: { ...mockUser, email, role },
+    permissions: ROLE_PERMISSIONS[role],
+  };
+};
+
+/** Login and refresh: the user, their permissions and a new access token. */
 const authResponse = (email = mockUser.email) =>
   HttpResponse.json({
-    user: { ...mockUser, email },
+    ...currentUser(email),
     accessToken: mockSession.issueToken(),
     accessTokenExpiresIn: 900,
   });
@@ -49,7 +63,7 @@ export const handlers = [
 
   http.get(apiUrl("/auth/me"), ({ request }) =>
     mockSession.isAuthorized(request)
-      ? HttpResponse.json({ user: mockUser })
+      ? HttpResponse.json(currentUser())
       : unauthorized(),
   ),
 
@@ -126,6 +140,19 @@ export const scenarios = {
 
   // No response at all, like being offline or the server being down.
   offline: [http.all(apiUrl("/*"), () => HttpResponse.error())],
+
+  // Logged in as a read-only "viewer": notes.view but not notes.edit.
+  // Lasts until reset, so logging in again keeps the role.
+  viewer: [
+    http.post(
+      apiUrl("/auth/refresh"),
+      () => {
+        mockSession.setRole("viewer");
+        return authResponse();
+      },
+      { once: true },
+    ),
+  ],
 
   "notes-server-error": [
     http.get(apiUrl("/notes"), () =>

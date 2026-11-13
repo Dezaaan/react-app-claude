@@ -1,17 +1,7 @@
 import { httpClient } from "@/shared/api/httpClient";
-import type {
-  AuthResponse,
-  LoginCredentials,
-  Permission,
-} from "@/features/auth/types";
+import type { AuthResponse, LoginCredentials } from "@/features/auth/types";
 
 type RequestConfig = { signal?: AbortSignal };
-
-/**
- * What every logged-in user may do, until the backend sends permissions.
- * Change `getPermissions` to call the backend when it does.
- */
-const LOGGED_IN_PERMISSIONS: Permission[] = ["notes.view", "notes.edit"];
 
 // The auth endpoints answer 401 for "wrong password" or "not logged in";
 // renewing the session and retrying would make no sense there.
@@ -20,7 +10,7 @@ const auth = { skipAuthRefresh: true };
 export const authApi = {
   /**
    * Starts a session. The backend sets the refresh-token cookie and returns
-   * the user with an access token.
+   * the user, their permissions and an access token.
    */
   login: (credentials: LoginCredentials, { signal }: RequestConfig = {}) =>
     httpClient.post<AuthResponse>("/auth/login", credentials, {
@@ -40,6 +30,4 @@ export const authApi = {
   /** Ends the current session and clears the cookie. */
   logout: ({ signal }: RequestConfig = {}) =>
     httpClient.post<void>("/auth/logout", undefined, { ...auth, signal }),
-
-  getPermissions: async (): Promise<Permission[]> => LOGGED_IN_PERMISSIONS,
 };
