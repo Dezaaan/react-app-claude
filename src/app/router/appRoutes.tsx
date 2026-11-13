@@ -4,7 +4,7 @@ import MainLayout from "@/layouts";
 import { AuthenticatedApp } from "@/app/router/AuthenticatedApp";
 import { authenticatedAppLoader } from "@/app/router/loaders/authenticatedAppLoader";
 
-import { AppErrorFallback } from "@/app/errors/AppErrorFallback";
+import { RootError } from "@/app/errors/RootError";
 import { RouteError } from "@/app/errors/RouteError";
 import {
   isApplicationRoute,
@@ -67,7 +67,7 @@ const standaloneRoutes = routeConfig
 // Kept separate from AppRouter so tests can mount the real route tree
 // in a memory router.
 export const appRoutes = createRoutesFromElements(
-  <Route errorElement={<AppErrorFallback />}>
+  <Route errorElement={<RootError />}>
     {applicationRoutes}
     <Route path={ROUTES.LOGOUT} action={logoutAction} />
     {standaloneRoutes}
