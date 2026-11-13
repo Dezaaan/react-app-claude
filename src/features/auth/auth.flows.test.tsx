@@ -231,6 +231,28 @@ describe("expired access token", () => {
     // The retry itself is tested in session.test.ts.
   });
 
+  it("stays logged in when refreshing is rate limited", async () => {
+    const router = renderApp("/notes");
+    await findPageHeading("Notes");
+    await screen.findByRole("status", {}, LOAD_TIMEOUT);
+
+    // The token expires, and the refresh hits the auth rate limit.
+    mockSession.expireToken();
+    server.use(
+      http.post(
+        apiUrl("/auth/refresh"),
+        () => HttpResponse.text("Too many requests", { status: 429 }),
+        { once: true },
+      ),
+    );
+    await userEvent.click(screen.getByRole("link", { name: "Page 2" }));
+
+    expect(
+      await screen.findByRole("alert", {}, LOAD_TIMEOUT),
+    ).toHaveTextContent("Too many attempts");
+    expect(router.state.location.pathname).toBe("/notes");
+  });
+
   it("goes to the login page when the session has ended", async () => {
     server.use(
       http.get(

@@ -45,7 +45,9 @@ export type RequestOptions = {
 
 /**
  * Renews the session after a 401. Resolves true when there is a new access
- * token to retry with, false when the user is logged out.
+ * token to retry with, false when the user is logged out. Rejects when the
+ * renewal itself failed (offline, rate limited): the request then fails
+ * with that error.
  */
 type UnauthorizedHandler = () => Promise<boolean>;
 

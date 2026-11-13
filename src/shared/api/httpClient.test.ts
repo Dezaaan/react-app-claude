@@ -171,14 +171,29 @@ describe("httpClient error responses", () => {
   it("reads plain-text error bodies", async () => {
     server.use(
       http.get(apiUrl("/things"), () =>
-        HttpResponse.text("Bad gateway", { status: 502 }),
+        HttpResponse.text("Internal error", { status: 500 }),
       ),
     );
 
     const error = await appErrorFrom(httpClient.get("/things"));
 
     expect(error.code).toBe(ERROR_CODES.SERVER_ERROR);
-    expect(error.message).toBe("Bad gateway");
+    expect(error.message).toBe("Internal error");
+  });
+
+  it("says it can't reach the server when a proxy answers 502", async () => {
+    // What the dev server returns while the backend is down.
+    server.use(
+      http.get(apiUrl("/things"), () =>
+        HttpResponse.text("Bad gateway", { status: 502 }),
+      ),
+    );
+
+    const error = await appErrorFrom(httpClient.get("/things"));
+
+    expect(error.code).toBe(ERROR_CODES.NETWORK_ERROR);
+    expect(error.status).toBe(502);
+    expect(error.userMessage).toBe("Unable to connect to the server.");
   });
 
   it("falls back to the status when the error body is empty", async () => {
@@ -192,7 +207,7 @@ describe("httpClient error responses", () => {
 
     const error = await appErrorFrom(httpClient.get("/things"));
 
-    expect(error.code).toBe(ERROR_CODES.SERVER_ERROR);
+    expect(error.code).toBe(ERROR_CODES.NETWORK_ERROR);
     expect(error.message).toBe("503 Unavailable");
   });
 });

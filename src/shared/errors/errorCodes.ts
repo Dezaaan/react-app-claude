@@ -30,6 +30,12 @@ export const errorCodeFromStatus = (status: number): ErrorCode => {
   if (status === 404) return ERROR_CODES.NOT_FOUND;
   if (status === 400 || status === 422) return ERROR_CODES.VALIDATION_ERROR;
   if (status === 429) return ERROR_CODES.TOO_MANY_REQUESTS;
+  // Bad gateway, unavailable, gateway timeout: a proxy in front of the API
+  // (or the dev server) couldn't reach it. For the user that's the same as
+  // no connection.
+  if (status === 502 || status === 503 || status === 504) {
+    return ERROR_CODES.NETWORK_ERROR;
+  }
   if (status >= 500) return ERROR_CODES.SERVER_ERROR;
   return ERROR_CODES.UNKNOWN_ERROR;
 };

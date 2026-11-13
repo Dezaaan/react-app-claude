@@ -141,4 +141,34 @@ describe("expired access token", () => {
     });
     expect(accessToken.get()).toBeNull();
   });
+
+  it.each([
+    [
+      "rate limited",
+      () =>
+        HttpResponse.text("Too many requests, please try again later.", {
+          status: 429,
+        }),
+      "TOO_MANY_REQUESTS",
+    ],
+    ["offline", () => HttpResponse.error(), "NETWORK_ERROR"],
+  ])(
+    "keeps the session when the refresh fails (%s), and tries again later",
+    async (_case, refreshFailure, code) => {
+      await getSession();
+      mockSession.expireToken();
+      server.use(
+        http.post(apiUrl("/auth/refresh"), refreshFailure, { once: true }),
+      );
+
+      // The request fails with the refresh's error, not with "log in".
+      await expect(httpClient.get("/auth/me")).rejects.toMatchObject({ code });
+      await expect(getSession()).resolves.toMatchObject({ user: mockUser });
+
+      // Once refreshing works again, so does the next request.
+      await expect(httpClient.get("/auth/me")).resolves.toMatchObject({
+        user: mockUser,
+      });
+    },
+  );
 });

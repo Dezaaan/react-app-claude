@@ -78,7 +78,9 @@ describe("errorCodeFromStatus", () => {
     [422, ERROR_CODES.VALIDATION_ERROR],
     [418, ERROR_CODES.UNKNOWN_ERROR],
     [500, ERROR_CODES.SERVER_ERROR],
-    [503, ERROR_CODES.SERVER_ERROR],
+    [502, ERROR_CODES.NETWORK_ERROR],
+    [503, ERROR_CODES.NETWORK_ERROR],
+    [504, ERROR_CODES.NETWORK_ERROR],
   ])("maps %i to %s", (status, code) => {
     expect(errorCodeFromStatus(status)).toBe(code);
   });
