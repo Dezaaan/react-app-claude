@@ -1,6 +1,7 @@
 import type { MouseEventHandler } from "react";
 import type { RowComponentProps } from "react-window";
 
+import { Button } from "@/shared/components/Button/Button";
 import { NoteItem } from "@/features/notes/components/NoteItem/NoteItem";
 import type { Note } from "@/features/notes/types";
 import styles from "./NotesList.module.scss";
@@ -35,9 +36,9 @@ export const NoteRow = ({
         {end.type === "error" && (
           <>
             <span role="alert">{end.message}</span>
-            <button type="button" onClick={end.onRetry}>
+            <Button size="sm" onClick={end.onRetry}>
               Try again
-            </button>
+            </Button>
           </>
         )}
         {end.type === "done" && end.count > 0 && (

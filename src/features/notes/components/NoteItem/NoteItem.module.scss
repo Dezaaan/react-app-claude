@@ -1,7 +1,49 @@
+// Fills its list row: title and date on the first line, content below.
 .button {
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-content: center;
+  gap: var(--space-1) var(--space-4);
+
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--space-4);
+
+  text-align: left;
+  background: transparent;
+  border: none;
+
   cursor: pointer;
-  height: 50px;
-  margin: 10px;
-  width: 100px;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  &:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
+.title,
+.content {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.date {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.content {
+  grid-column: 1 / -1;
+  font-size: var(--font-sm);
 }

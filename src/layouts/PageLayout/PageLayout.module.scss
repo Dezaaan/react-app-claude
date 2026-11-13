@@ -9,9 +9,13 @@
 
 .container {
   width: 100%;
-  max-width: stretch;
+  max-width: var(--content-width);
   margin: 0 auto;
-  padding: 24px;
+  padding: var(--space-8) var(--space-6);
+
+  @media (max-width: 640px) {
+    padding: var(--space-6) var(--space-4);
+  }
 
   transition: opacity 150ms ease;
 }
@@ -55,10 +59,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .container {
-    transition: none;
-  }
-
   .progress::after {
     width: 100%;
     animation: none;

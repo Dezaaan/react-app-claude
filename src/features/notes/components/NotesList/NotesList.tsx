@@ -5,6 +5,9 @@ import type { Note } from "@/features/notes/types";
 import { NoteRow, type ListEnd } from "./NoteRow";
 import styles from "./NotesList.module.scss";
 
+/** Title and date, plus one line of content (see NoteItem). */
+const NOTE_ROW_HEIGHT = 72;
+
 /** Ask for more when the last visible row is this close to the end. */
 const LOAD_AHEAD_ROWS = 5;
 
@@ -79,7 +82,7 @@ export const NotesList = memo(
         aria-busy={isLoading}
         className={styles.list}
         rowCount={notes.length + 1}
-        rowHeight={100}
+        rowHeight={NOTE_ROW_HEIGHT}
         rowProps={rowProps}
         rowComponent={NoteRow}
         onRowsRendered={handleRowsRendered}

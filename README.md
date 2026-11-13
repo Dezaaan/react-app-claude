@@ -103,5 +103,10 @@ Conventions:
   - **Infinite scroll** (Home): the loader fetches the first page;
     `useInfiniteList` appends the next one when the list nears its end
     (one request at a time, duplicates skipped, cancelled on unmount).
+- Styles: SCSS modules per component. Colors, sizes, spacing and fonts come
+  from the CSS variables in `src/app/styles/tokens.css` (with dark-mode
+  values), never hardcoded. `base.css` styles plain elements, including
+  inputs and selects. Use the shared `Button` (`primary`, `secondary`,
+  `danger`) instead of styling buttons per component.
 - API errors become an `AppError` (`src/shared/errors`) with a code and a
   message that is safe to show to users.

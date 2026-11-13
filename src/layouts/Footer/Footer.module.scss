@@ -1,16 +1,22 @@
 .footer {
   margin-top: auto;
+  padding: var(--space-8) 0;
 
+  background: var(--surface-raised);
   border-top: 1px solid var(--border);
-
-  background: var(--surface);
-
-  padding: 3rem 2rem;
 }
 
 .container {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-8) 6rem;
 
-  gap: 6rem;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  // Same edges as the header and page content.
+  padding: 0 var(--space-6);
+
+  @media (max-width: 640px) {
+    padding: 0 var(--space-4);
+  }
 }

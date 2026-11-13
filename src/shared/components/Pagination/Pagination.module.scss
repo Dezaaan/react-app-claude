@@ -5,7 +5,7 @@
   justify-content: center;
   gap: 0.5rem;
 
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .pages {
@@ -25,16 +25,15 @@
   align-items: center;
   justify-content: center;
 
-  min-width: 2rem;
-  height: 2rem;
-  padding: 0 0.5rem;
-  box-sizing: border-box;
+  min-width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  padding: 0 var(--space-2);
 
   color: var(--text-h);
   text-decoration: none;
 
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius);
 
   transition: background-color 0.15s ease;
 }
@@ -44,14 +43,8 @@ a.step:hover {
   background: var(--surface-hover);
 }
 
-.page:focus-visible,
-.step:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
 .current {
-  color: white;
+  color: var(--on-accent);
   background: var(--accent);
   border-color: var(--accent);
 
