@@ -83,6 +83,9 @@ Conventions:
 - Import with `@/…` (maps to `src/`) for anything outside the current
   folder. ESLint rejects `../` imports.
 - `shared/` must not import from `features/`, `pages/` or `app/`.
+- Tests go in a `__tests__/` folder next to the code they test, e.g.
+  `shared/components/Button/__tests__/Button.test.tsx`, and import it
+  with `@/…`.
 - Routes are declared in `src/app/router/route-config.ts`: path, page,
   loader, required permission and navigation entry. Pages load with the
   route's `lazy`, in parallel with its loader.
