@@ -8,7 +8,11 @@ import { mockSession } from "@/mocks/session";
 import { accessToken } from "@/shared/api/accessToken";
 import { apiUrl, httpClient } from "@/shared/api/httpClient";
 import { testPermissions } from "@/test/utils";
-import { clearSession, getSession, startSession } from "@/features/auth/session";
+import {
+  clearSession,
+  getSession,
+  startSession,
+} from "@/features/auth/session";
 
 /** Counts requests to `path` while they're still answered normally. */
 const countRequests = (path: string) => {

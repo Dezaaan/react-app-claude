@@ -2,7 +2,10 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Paginated } from "@/shared/api/pagination";
-import { useInfiniteList, type FetchPage } from "@/shared/hooks/useInfiniteList";
+import {
+  useInfiniteList,
+  type FetchPage,
+} from "@/shared/hooks/useInfiniteList";
 
 type Item = { id: string };
 

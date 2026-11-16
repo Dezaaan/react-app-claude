@@ -1,9 +1,9 @@
+import { PageHeader } from "@/layouts/PageHeader/PageHeader";
+
 const ProfilePage = () => {
   return (
     <div>
-      <h1>Profile</h1>
-
-      <p>View and edit your profile information.</p>
+      <PageHeader />
     </div>
   );
 };

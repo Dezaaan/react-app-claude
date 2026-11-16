@@ -1,9 +1,9 @@
+import { PageHeader } from "@/layouts/PageHeader/PageHeader";
+
 const SettingsPage = () => {
   return (
     <div>
-      <h1>Settings</h1>
-
-      <p>Application settings.</p>
+      <PageHeader />
     </div>
   );
 };

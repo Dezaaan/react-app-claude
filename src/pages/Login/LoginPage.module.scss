@@ -18,11 +18,6 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
 
-  // The subtitle under the title.
-  > p {
-    margin-bottom: var(--space-6);
-  }
-
   @media (max-width: 640px) {
     padding: var(--space-6);
   }

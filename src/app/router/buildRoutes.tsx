@@ -8,6 +8,7 @@ import type {
   RouteAccess,
   RouteConfig,
 } from "./types";
+import type { RouteHandle } from "./useRouteMeta";
 
 // Route `lazy` (unlike React.lazy) lets the router fetch the page's code
 // while its loader runs, instead of only after the data has arrived.
@@ -56,6 +57,8 @@ const toRouteObject = (
     loader: guarded ? guardLoader(access, loader) : loader,
     action,
     lazy: page && lazyPage(page),
+    // Lets the page read its title and description (useRouteMeta).
+    handle: { meta } satisfies RouteHandle,
     ...(guarded && { errorElement: <RouteError /> }),
   };
 
