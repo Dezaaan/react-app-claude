@@ -50,10 +50,16 @@ type RouteFields = {
 /**
  * A route inside another one. `path` is relative to the parent
  * (`":id"` under `/notes` is `/notes/:id`); `index: true` is the page at
- * the parent's own path.
+ * the parent's own path. An index route can't have children (React Router
+ * doesn't allow it), so put them on the parent instead.
  */
-export type ChildRoute = RouteFields &
-  ({ path: string; index?: never } | { index: true; path?: never });
+export type ChildRoute =
+  | (RouteFields & { path: string; index?: never })
+  | (Omit<RouteFields, "children"> & {
+      index: true;
+      path?: never;
+      children?: never;
+    });
 
 type TopLevelRoute = RouteFields & { path: string };
 
