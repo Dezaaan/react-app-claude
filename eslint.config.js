@@ -33,7 +33,8 @@ export default defineConfig([
   {
     // Shared code is used by everything, so it can't depend on the app.
     files: ['src/shared/**/*.{ts,tsx}'],
-    ignores: ['src/shared/**/*.test.{ts,tsx}'],
+    // Tests aren't shipped, so they may use code from outside shared/.
+    ignores: ['src/shared/**/__tests__/**'],
     rules: {
       'no-restricted-imports': [
         'error',
