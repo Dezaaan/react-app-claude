@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import { NoteDetailsModal } from "./NoteDetailsModal";
+import { NoteDetailsModal } from "@/features/notes/components/NoteDetailsModal/NoteDetailsModal";
 
 const note = {
   id: "1",

@@ -4,7 +4,7 @@ import { AppError } from "@/shared/errors/AppError";
 import { ERROR_CODES } from "@/shared/errors/errorCodes";
 import { MOCK_PASSWORD, mockUser } from "@/mocks/data";
 import { mockSession } from "@/mocks/session";
-import { authApi } from "./authApi";
+import { authApi } from "@/features/auth/api/authApi";
 
 const codeOf = (promise: Promise<unknown>) =>
   promise.then(

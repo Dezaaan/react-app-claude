@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { canAccess } from "./access";
+import { canAccess } from "@/features/auth/access";
 
 describe("canAccess", () => {
   it("allows any logged-in user when there's no requirement", () => {

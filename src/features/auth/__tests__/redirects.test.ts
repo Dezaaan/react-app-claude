@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { loginUrl, safeRedirect } from "./redirects";
+import { loginUrl, safeRedirect } from "@/features/auth/redirects";
 
 describe("safeRedirect", () => {
   it.each(["/notes", "/notes?page=2", "/about#team"])(

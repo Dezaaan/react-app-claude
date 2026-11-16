@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Note } from "@/features/notes/types";
-import { NotesList } from "./NotesList";
+import { NotesList } from "@/features/notes/components/NotesList/NotesList";
 
 const notes: Note[] = Array.from({ length: 3 }, (_, index) => ({
   id: String(index + 1),

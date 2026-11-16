@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { Note } from "@/features/notes/types";
-import { queryNotes } from "./notesQuery";
+import { queryNotes } from "@/mocks/notesQuery";
 
 // The mock must behave like the backend, or tests prove the wrong thing.
 

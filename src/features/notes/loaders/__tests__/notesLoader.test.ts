@@ -8,7 +8,7 @@ import { server } from "@/mocks/server";
 import { apiUrl } from "@/shared/api/httpClient";
 import { loaderArgs } from "@/test/utils";
 import type { Note } from "@/features/notes/types";
-import { notesLoader } from "./notesLoader";
+import { notesLoader } from "@/features/notes/loaders/notesLoader";
 
 describe("notesLoader (Home)", () => {
   it("returns the first page from the API", async () => {

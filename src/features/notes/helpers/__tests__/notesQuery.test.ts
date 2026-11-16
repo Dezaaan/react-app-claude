@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { notesQueryFromUrl } from "./notesQuery";
+import { notesQueryFromUrl } from "@/features/notes/helpers/notesQuery";
 
 const query = (search: string) =>
   notesQueryFromUrl(new URLSearchParams(search));
