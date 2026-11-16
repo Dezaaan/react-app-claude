@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { renderWithAuth } from "@/test/utils";
-import { NavigationMenu } from "./NavigationMenu";
+import { NavigationMenu } from "@/navigation/components/NavigationMenu/NavigationMenu";
 
 const renderMenu = () =>
   renderWithAuth(

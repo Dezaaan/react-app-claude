@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { RouteConfig } from "@/app/router/types";
 import type { Permission } from "@/features/auth/types";
 import { canAccess } from "@/features/auth/access";
-import { navigationItems } from "./navigationItems";
+import { navigationItems } from "@/navigation/hooks/navigationItems";
 
 const nav = (
   label: string,

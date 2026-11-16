@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { AuthProvider } from "@/features/auth/context/AuthProvider";
 import type { Permission } from "@/features/auth/types";
 import { mockUser } from "@/mocks/data";
-import { useNavigationItems } from "./useNavigationItems";
+import { useNavigationItems } from "@/navigation/hooks/useNavigationItems";
 
 const labels = (
   placement: "nav" | "menu",

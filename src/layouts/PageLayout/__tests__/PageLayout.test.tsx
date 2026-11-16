@@ -5,7 +5,7 @@ import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
 import { usePendingIndicator } from "@/shared/pending/pendingContext";
-import { PageLayout } from "./PageLayout";
+import { PageLayout } from "@/layouts/PageLayout/PageLayout";
 
 const Busy = ({ label }: { label: string }) => {
   const [isPending, setIsPending] = useState(false);
