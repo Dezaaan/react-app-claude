@@ -1,4 +1,5 @@
 import type { AccessRequirement } from "@/features/auth/types";
+import type { Text } from "@/shared/content/types";
 import type { ComponentType } from "react";
 import type { ActionFunction, LoaderFunction } from "react-router-dom";
 
@@ -6,7 +7,7 @@ export type RoutePlacement = "nav" | "menu";
 
 /** Shows the route as a link in the header ("nav") or the user menu. */
 export interface RouteNavigation {
-  label: string;
+  label: Text;
   order: number;
   placement: RoutePlacement;
   /** Set to false to hide the link without removing it. */
@@ -22,7 +23,10 @@ export type RouteLayout = "application" | "standalone";
 export type PageModule = { default: ComponentType };
 
 export type RouteMeta = {
-  title: string;
+  /** The page heading (PageHeader) and the browser tab title. */
+  title: Text;
+  /** One sentence under the heading. Longer text belongs in the page. */
+  description?: Text;
   /**
    * Also required by every route below this one: a child can add a
    * requirement, never remove one.
