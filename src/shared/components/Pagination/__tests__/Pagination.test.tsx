@@ -2,8 +2,8 @@ import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
-import { getPageItems } from "./getPageItems";
-import { Pagination } from "./Pagination";
+import { getPageItems } from "@/shared/components/Pagination/getPageItems";
+import { Pagination } from "@/shared/components/Pagination/Pagination";
 
 describe("getPageItems", () => {
   it.each([

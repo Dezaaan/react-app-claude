@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { AppError } from "./AppError";
-import { ERROR_CODES, errorCodeFromStatus } from "./errorCodes";
-import { normalizeError } from "./normalizeError";
+import { AppError } from "@/shared/errors/AppError";
+import { ERROR_CODES, errorCodeFromStatus } from "@/shared/errors/errorCodes";
+import { normalizeError } from "@/shared/errors/normalizeError";
 
 // Same shape React Router uses for responses thrown from loaders.
 const routeErrorResponse = (status: number, statusText = "") => ({

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatDate } from "./formatDate";
+import { formatDate } from "@/shared/utils/formatDate";
 
 describe("formatDate", () => {
   it("formats ISO dates as dd/mm/yyyy", () => {

@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { AppError } from "@/shared/errors/AppError";
 import { ERROR_CODES } from "@/shared/errors/errorCodes";
 import { server } from "@/mocks/server";
-import { apiUrl, httpClient } from "./httpClient";
+import { apiUrl, httpClient } from "@/shared/api/httpClient";
 
 /** Runs `promise`, expecting it to reject with an AppError. */
 const appErrorFrom = async (promise: Promise<unknown>) => {
