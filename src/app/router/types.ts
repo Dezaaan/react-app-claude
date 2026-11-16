@@ -1,5 +1,5 @@
 import type { AccessRequirement } from "@/features/auth/types";
-import type { Text } from "@/shared/content/types";
+import type { ContentModule, Text } from "@/shared/content/types";
 import type { ComponentType } from "react";
 import type { ActionFunction, LoaderFunction } from "react-router-dom";
 
@@ -45,6 +45,11 @@ type RouteFields = {
    * e.g. `/notes` (list) and `/notes/:id` (details) as separate screens.
    */
   page?: () => Promise<PageModule>;
+  /**
+   * Imports the page's longer content (a `*.content.ts` file), together
+   * with the page code. The page shows it with `<PageContent />`.
+   */
+  content?: () => Promise<ContentModule>;
   loader?: LoaderFunction;
   action?: ActionFunction;
   meta: RouteMeta;
