@@ -12,6 +12,7 @@ const applicationRoutes = [
     layout: "application",
     meta: {
       title: "Home",
+      description: "Welcome to the Notes application.",
       navigation: {
         label: "Home",
         order: 1,
@@ -42,6 +43,7 @@ const applicationRoutes = [
     layout: "application",
     meta: {
       title: "About",
+      description: "Learn more about our company.",
       navigation: {
         label: "About",
         order: 3,
@@ -56,6 +58,7 @@ const applicationRoutes = [
     layout: "application",
     meta: {
       title: "Contact",
+      description: "Get in touch with us.",
       navigation: {
         label: "Contact",
         order: 4,
@@ -70,6 +73,7 @@ const applicationRoutes = [
     layout: "application",
     meta: {
       title: "Profile",
+      description: "View and edit your profile information.",
       navigation: {
         label: "Profile",
         order: 5,
@@ -84,6 +88,7 @@ const applicationRoutes = [
     layout: "application",
     meta: {
       title: "Settings",
+      description: "Application settings.",
       navigation: {
         label: "Settings",
         order: 6,
@@ -103,6 +108,7 @@ const standaloneRoutes = [
     layout: "standalone",
     meta: {
       title: "Login",
+      description: "Please enter your credentials to log in.",
     },
   },
   {
@@ -110,7 +116,8 @@ const standaloneRoutes = [
     page: () => import("@/pages/NotFound/NotFoundPage"),
     layout: "standalone",
     meta: {
-      title: "Not Found",
+      title: "Page Not Found",
+      description: "The page you are looking for does not exist.",
     },
   },
 ] satisfies RouteConfig[];
