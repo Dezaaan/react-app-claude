@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
-import { RootError } from "./RootError";
+import { RootError } from "@/app/errors/RootError";
 
 const Broken = () => {
   throw new Error("Bug while rendering");

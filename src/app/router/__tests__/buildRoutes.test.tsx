@@ -8,8 +8,8 @@ import {
 import { describe, expect, it, vi } from "vitest";
 
 import { LOAD_TIMEOUT } from "@/test/utils";
-import { buildRoutes } from "./buildRoutes";
-import type { RouteAccess, RouteConfig } from "./types";
+import { buildRoutes } from "@/app/router/buildRoutes";
+import type { RouteAccess, RouteConfig } from "@/app/router/types";
 
 // The mock session is logged in with notes.view and notes.edit, but not
 // users.view.

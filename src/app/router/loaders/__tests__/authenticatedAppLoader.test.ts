@@ -4,7 +4,7 @@ import { mockUser } from "@/mocks/data";
 import { scenarios } from "@/mocks/handlers";
 import { server } from "@/mocks/server";
 import { loaderArgs, testPermissions } from "@/test/utils";
-import { authenticatedAppLoader } from "./authenticatedAppLoader";
+import { authenticatedAppLoader } from "@/app/router/loaders/authenticatedAppLoader";
 
 describe("authenticatedAppLoader", () => {
   it("returns the user and their permissions", async () => {
