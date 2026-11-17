@@ -1,3 +1,4 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render } from "@testing-library/react";
 import type { ReactNode } from "react";
 import {
@@ -10,6 +11,7 @@ import { appRoutes } from "@/app/router/appRoutes";
 import { AuthProvider } from "@/features/auth/context/AuthProvider";
 import type { AuthState, Permission } from "@/features/auth/types";
 import { mockUser, ROLE_PERMISSIONS } from "@/mocks/data";
+import { queryClient } from "@/shared/query/queryClient";
 
 /** What the default mock user (role "user") may do. */
 export const testPermissions: Permission[] = ROLE_PERMISSIONS.user;
@@ -33,10 +35,18 @@ export const loaderArgs = (
   };
 };
 
+/**
+ * Wraps `ui` in the app's providers. Tests share the app's query client,
+ * like loaders do; the cache is emptied after each test (clearSession).
+ */
+const withProviders = (ui: ReactNode) => (
+  <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+);
+
 /** Mounts the real app at `path`. Only the network is mocked (MSW). */
 export const renderApp = (path: string) => {
   const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
-  render(<RouterProvider router={router} />);
+  render(withProviders(<RouterProvider router={router} />));
   return router;
 };
 
@@ -61,6 +71,6 @@ export const renderWithAuth = (
     },
   ]);
 
-  render(<RouterProvider router={router} />);
+  render(withProviders(<RouterProvider router={router} />));
   return router;
 };
