@@ -1,34 +1,37 @@
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 
-import type { Paginated } from "@/shared/api/pagination";
 import { normalizeError } from "@/shared/errors/normalizeError";
 import { DEFAULT_USER_MESSAGES } from "@/shared/errors/errorCodes";
-import {
-  useInfiniteList,
-  type FetchPage,
-} from "@/shared/hooks/useInfiniteList";
-import { notesApi } from "@/features/notes/api/notesApi";
+import { usePendingIndicator } from "@/shared/pending/pendingContext";
+import { notesQueries } from "@/features/notes/api/notesQueries";
 import { NoteDetailsModal } from "@/features/notes/components/NoteDetailsModal/NoteDetailsModal";
 import { NotesList } from "@/features/notes/components/NotesList/NotesList";
-import { HOME_NOTES_PAGE_SIZE } from "@/features/notes/loaders/notesLoader";
 import type { Note } from "@/features/notes/types";
 import styles from "./NotesFeature.module.scss";
 
-type NotesFeatureProps = {
-  /** The first page, from the route loader. */
-  notes: Paginated<Note>;
-};
-
-// Same query as the loader, one page further each time.
-const fetchNotesPage: FetchPage<Note> = (page, signal) =>
-  notesApi.getNotes({ page, pageSize: HOME_NOTES_PAGE_SIZE }, { signal });
-
 /** All notes, newest first, loading more as the user scrolls. */
-export const NotesFeature = ({ notes }: NotesFeatureProps) => {
+export const NotesFeature = () => {
   // The selected note doubles as the modal's open state.
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const { items, totalItems, hasMore, isLoading, error, loadMore } =
-    useInfiniteList(notes, fetchNotesPage);
+  // The route loader put the first page in the cache.
+  const {
+    data: { items, totalItems },
+    hasNextPage,
+    isFetchingNextPage,
+    isFetchNextPageError,
+    error,
+    fetchNextPage,
+  } = useSuspenseInfiniteQuery(notesQueries.infinite());
+
+  usePendingIndicator(isFetchingNextPage);
+
+  // The list asks for more as it nears the end, possibly several times
+  // before a re-render; cancelRefetch: false makes the extra calls join the
+  // request already running instead of starting it over.
+  const loadMore = useCallback(() => {
+    void fetchNextPage({ cancelRefetch: false });
+  }, [fetchNextPage]);
 
   const handleClose = useCallback(() => {
     setSelectedNote(null);
@@ -47,10 +50,10 @@ export const NotesFeature = ({ notes }: NotesFeatureProps) => {
       <NotesList
         notes={items}
         totalCount={totalItems}
-        hasMore={hasMore}
-        isLoading={isLoading}
+        hasMore={hasNextPage}
+        isLoading={isFetchingNextPage}
         error={
-          error
+          isFetchNextPageError
             ? (normalizeError(error).userMessage ??
               DEFAULT_USER_MESSAGES.UNKNOWN_ERROR)
             : undefined
