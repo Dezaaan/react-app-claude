@@ -8,8 +8,10 @@ import { mockSession } from "@/mocks/session";
 import { accessToken } from "@/shared/api/accessToken";
 import { apiUrl, httpClient } from "@/shared/api/httpClient";
 import { testPermissions } from "@/test/utils";
+import { queryClient } from "@/shared/query/queryClient";
 import {
   clearSession,
+  endSession,
   getSession,
   startSession,
 } from "@/features/auth/session";
@@ -175,4 +177,18 @@ describe("expired access token", () => {
       });
     },
   );
+});
+
+describe("cached data", () => {
+  // The cache holds the logged-in user's data; the next user must not see it.
+  it.each([
+    ["the session is cleared (it expired)", clearSession],
+    ["the user logs out", endSession],
+  ])("is dropped when %s", (_, forget) => {
+    queryClient.setQueryData(["notes"], { items: ["private note"] });
+
+    forget();
+
+    expect(queryClient.getQueryData(["notes"])).toBeUndefined();
+  });
 });

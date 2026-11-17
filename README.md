@@ -2,8 +2,8 @@
 
 A React app for browsing notes, with login and per-route permissions.
 
-React 19, TypeScript, Vite, React Router 7 (data router), SCSS modules,
-react-window for large lists, Vitest + Testing Library, MSW to mock the API in tests.
+React 19, TypeScript, Vite, React Router 7 (data router), TanStack Query,
+SCSS modules, react-window for large lists, Vitest + Testing Library, MSW to mock the API in tests.
 
 ## Getting started
 
@@ -98,6 +98,12 @@ Conventions:
   only uses them to show or hide things; the backend enforces them. Check
   permissions (`hasPermission`), never role names. A role change reaches a
   logged-in user at their next refresh (within 15 minutes).
+- Server data is cached with TanStack Query (`shared/query/queryClient.ts`,
+  one client for loaders and components). Each feature defines its keys and
+  queries in one place, e.g. `features/notes/api/notesQueries.ts`; data is
+  fresh for 30 s, and the cache is emptied when the session ends. In
+  development, the round button at the bottom left opens the cache
+  inspector.
 - Long lists, two ways (both read the backend one page at a time):
   - **Numbered pages** (Notes): page, filters and sorting live in the URL
     (`/notes?page=2&title=shop&sortBy=title&sortOrder=asc`); the route
