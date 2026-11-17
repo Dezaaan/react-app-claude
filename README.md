@@ -101,7 +101,7 @@ Conventions:
 - Server data is cached with TanStack Query (`shared/query/queryClient.ts`,
   one client for loaders and components). Each feature defines its keys and
   queries in one place, e.g. `features/notes/api/notesQueries.ts`; data is
-  fresh for 30 s, and the cache is emptied when the session ends. In
+  fresh for 30 s, and the cache is emptied at login and logout. In
   development, the round button at the bottom left opens the cache
   inspector.
 - Long lists, two ways (both read the backend one page at a time):

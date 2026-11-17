@@ -76,32 +76,35 @@ export const getSession = (): Promise<AuthState | null> => {
   return sessionPromise;
 };
 
+/**
+ * The cache holds the logged-in user's data. Empty it whenever the user
+ * changes (login, logout), so the next person on this browser never sees
+ * it. Not when a session merely expires: that happens in the middle of a
+ * request, and emptying the cache then would cancel the request instead
+ * of letting its 401 send the user to the login page. Whoever continues
+ * has to log in, which empties it.
+ */
+const forgetCachedData = () => queryClient.clear();
+
 /** After logging in: use the response instead of asking the server again. */
 export const startSession = (response: AuthResponse) => {
+  forgetCachedData();
   const session = toSession(response);
   sessionPromise = Promise.resolve(session);
   return session;
 };
 
-/**
- * Drops the token and every cached response. The cache holds this user's
- * data, so the next person to log in on this browser must not see it.
- */
-const forgetUser = () => {
-  accessToken.clear();
-  queryClient.clear();
-};
-
-/** Forgets the session and its data; the next getSession() asks again. */
+/** Forgets the session and its token; the next getSession() asks again. */
 export const clearSession = () => {
   sessionPromise = null;
-  forgetUser();
+  accessToken.clear();
 };
 
 /** After logging out: we know there's no session, no need to ask. */
 export const endSession = () => {
   sessionPromise = Promise.resolve(null);
-  forgetUser();
+  accessToken.clear();
+  forgetCachedData();
 };
 
 // An API request got 401: the access token expired (it lives 15 minutes).
