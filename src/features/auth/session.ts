@@ -2,6 +2,7 @@ import { accessToken } from "@/shared/api/accessToken";
 import { setUnauthorizedHandler } from "@/shared/api/httpClient";
 import { AppError } from "@/shared/errors/AppError";
 import { ERROR_CODES } from "@/shared/errors/errorCodes";
+import { queryClient } from "@/shared/query/queryClient";
 import { authApi } from "@/features/auth/api/authApi";
 import type { AuthResponse, AuthState } from "./types";
 
@@ -82,16 +83,25 @@ export const startSession = (response: AuthResponse) => {
   return session;
 };
 
-/** Forgets the session and its token; the next getSession() asks again. */
+/**
+ * Drops the token and every cached response. The cache holds this user's
+ * data, so the next person to log in on this browser must not see it.
+ */
+const forgetUser = () => {
+  accessToken.clear();
+  queryClient.clear();
+};
+
+/** Forgets the session and its data; the next getSession() asks again. */
 export const clearSession = () => {
   sessionPromise = null;
-  accessToken.clear();
+  forgetUser();
 };
 
 /** After logging out: we know there's no session, no need to ask. */
 export const endSession = () => {
   sessionPromise = Promise.resolve(null);
-  accessToken.clear();
+  forgetUser();
 };
 
 // An API request got 401: the access token expired (it lives 15 minutes).
