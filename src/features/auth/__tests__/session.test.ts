@@ -182,12 +182,21 @@ describe("expired access token", () => {
 describe("cached data", () => {
   // The cache holds the logged-in user's data; the next user must not see it.
   it.each([
-    ["the session is cleared (it expired)", clearSession],
+    [
+      "a user logs in",
+      () =>
+        startSession({
+          user: mockUser,
+          permissions: testPermissions,
+          accessToken: "from-login",
+          accessTokenExpiresIn: 900,
+        }),
+    ],
     ["the user logs out", endSession],
-  ])("is dropped when %s", (_, forget) => {
+  ])("is dropped when %s", (_, change) => {
     queryClient.setQueryData(["notes"], { items: ["private note"] });
 
-    forget();
+    change();
 
     expect(queryClient.getQueryData(["notes"])).toBeUndefined();
   });

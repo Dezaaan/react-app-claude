@@ -29,10 +29,12 @@ afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
   server.resetHandlers();
-  // Each test starts logged in, with nothing cached from the previous one
-  // (clearSession also empties the query cache).
+  // Request counters from the test that just ran.
+  server.events.removeAllListeners();
+  // Each test starts logged in, with nothing cached from the previous one.
   mockSession.reset();
   clearSession();
+  queryClient.clear();
 });
 
 afterAll(() => server.close());
