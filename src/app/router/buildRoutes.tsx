@@ -2,6 +2,8 @@ import type { LoaderFunction, RouteObject } from "react-router-dom";
 
 import { RouteError } from "@/app/errors/RouteError";
 import { withAccess } from "@/features/auth/routes/requireAccess";
+import { PageContentContext } from "@/shared/content/pageContentContext";
+import type { ContentModule } from "@/shared/content/types";
 import type {
   ConfigRoute,
   PageModule,
@@ -12,9 +14,29 @@ import type { RouteHandle } from "./useRouteMeta";
 
 // Route `lazy` (unlike React.lazy) lets the router fetch the page's code
 // while its loader runs, instead of only after the data has arrived.
-const lazyPage = (page: () => Promise<PageModule>) => async () => ({
-  Component: (await page()).default,
-});
+// The page's content file downloads at the same time, and only for pages
+// that are opened.
+const lazyPage =
+  (page: () => Promise<PageModule>, content?: () => Promise<ContentModule>) =>
+  async () => {
+    const [{ default: Page }, contentModule] = await Promise.all([
+      page(),
+      content?.(),
+    ]);
+
+    if (!contentModule) {
+      return { Component: Page };
+    }
+
+    const pageContent = contentModule.default;
+    return {
+      Component: () => (
+        <PageContentContext.Provider value={pageContent}>
+          <Page />
+        </PageContentContext.Provider>
+      ),
+    };
+  };
 
 /**
  * Wraps `loader` in one access check per requirement, outermost first.
@@ -46,7 +68,7 @@ const toRouteObject = (
   route: ConfigRoute,
   { guarded, inheritedAccess = [] }: BuildOptions,
 ): RouteObject => {
-  const { page, loader, action, meta, children } = route;
+  const { page, content, loader, action, meta, children } = route;
   const access = meta.access
     ? [...inheritedAccess, meta.access]
     : inheritedAccess;
@@ -56,7 +78,7 @@ const toRouteObject = (
     // page's data is only fetched for users allowed to see it.
     loader: guarded ? guardLoader(access, loader) : loader,
     action,
-    lazy: page && lazyPage(page),
+    lazy: page && lazyPage(page, content),
     // Lets the page read its title and description (useRouteMeta).
     handle: { meta } satisfies RouteHandle,
     ...(guarded && { errorElement: <RouteError /> }),

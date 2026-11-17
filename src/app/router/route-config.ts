@@ -40,6 +40,7 @@ const applicationRoutes = [
   {
     path: ROUTES.ABOUT,
     page: () => import("@/pages/About/AboutPage"),
+    content: () => import("@/pages/About/about.content"),
     layout: "application",
     meta: {
       title: "About",
@@ -55,6 +56,7 @@ const applicationRoutes = [
   {
     path: ROUTES.CONTACT,
     page: () => import("@/pages/Contact/ContactPage"),
+    content: () => import("@/pages/Contact/contact.content"),
     layout: "application",
     meta: {
       title: "Contact",
@@ -70,6 +72,7 @@ const applicationRoutes = [
   {
     path: ROUTES.PROFILE,
     page: () => import("@/pages/Profile/ProfilePage"),
+    content: () => import("@/pages/Profile/profile.content"),
     layout: "application",
     meta: {
       title: "Profile",
@@ -85,6 +88,7 @@ const applicationRoutes = [
   {
     path: ROUTES.SETTINGS,
     page: () => import("@/pages/Settings/SettingsPage"),
+    content: () => import("@/pages/Settings/settings.content"),
     layout: "application",
     meta: {
       title: "Settings",

@@ -10,6 +10,7 @@ import { describe, expect, it, vi } from "vitest";
 import { LOAD_TIMEOUT } from "@/test/utils";
 import { buildRoutes } from "@/app/router/buildRoutes";
 import type { RouteAccess, RouteConfig } from "@/app/router/types";
+import { PageContent } from "@/shared/content/PageContent";
 
 // The mock session is logged in with notes.view and notes.edit, but not
 // users.view.
@@ -128,5 +129,32 @@ describe("buildRoutes", () => {
       ),
     ).toBeInTheDocument();
     expect(detailsLoader).not.toHaveBeenCalled();
+  });
+  it("gives a page the content file from its config", async () => {
+    render_("/about", [
+      {
+        path: "/about",
+        layout: "application",
+        page: page(() => <PageContent />),
+        content: async () => ({
+          default: {
+            sections: [
+              {
+                heading: "Our story",
+                blocks: [
+                  { type: "paragraph", text: "It started with a list." },
+                ],
+              },
+            ],
+          },
+        }),
+        meta: { title: "About" },
+      },
+    ]);
+
+    expect(
+      await screen.findByRole("heading", { name: "Our story" }, LOAD_TIMEOUT),
+    ).toBeInTheDocument();
+    expect(screen.getByText("It started with a list.")).toBeInTheDocument();
   });
 });
