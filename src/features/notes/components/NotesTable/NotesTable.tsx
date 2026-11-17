@@ -15,7 +15,7 @@ import { columns } from "./columns";
 import styles from "./NotesTable.module.scss";
 
 type NotesTableProps = {
-  /** The page the loader fetched for the current URL. */
+  /** The page of notes for the current URL. */
   notes: Paginated<Note>;
 };
 
