@@ -107,11 +107,12 @@ Conventions:
 - Long lists, two ways (both read the backend one page at a time):
   - **Numbered pages** (Notes): page, filters and sorting live in the URL
     (`/notes?page=2&title=shop&sortBy=title&sortOrder=asc`); the route
-    loader fetches that page. Shared pieces: `Pagination`, sortable
-    `Table` headers and `useTableUrlState`.
-  - **Infinite scroll** (Home): the loader fetches the first page;
-    `useInfiniteList` appends the next one when the list nears its end
-    (one request at a time, duplicates skipped, cancelled on unmount).
+    loader puts that page in the cache (`notesQueries.list`). Shared
+    pieces: `Pagination`, sortable `Table` headers and `useTableUrlState`.
+  - **Infinite scroll** (Home): the loader puts the first page in the
+    cache; `useSuspenseInfiniteQuery(notesQueries.infinite())` adds the
+    next one when the list nears its end (one request at a time,
+    duplicates skipped). Coming back keeps the pages already loaded.
 - Styles: SCSS modules per component. Colors, sizes, spacing and fonts come
   from the CSS variables in `src/app/styles/tokens.css` (with dark-mode
   values), never hardcoded. `base.css` styles plain elements, including
